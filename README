@@ -1,4 +1,7 @@
 # README file
 
-pikpikpik
-diller
+This project is done by Christian Pedersen and Vincent Tofterup in relation to a 
+Bachelor project for SDU.
+
+The aim is to build a solution for a drone to avoid collision with beams and bars in a
+greenhouse environment.
