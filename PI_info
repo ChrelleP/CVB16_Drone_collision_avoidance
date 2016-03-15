@@ -1,0 +1,7 @@
+# To connect to the Pi, use the following adresses:
+
+Pi interface:
+	adress 10.42.0.233
+	netmask 255.255.255.0
+	gateway 10.42.0.1
+	broadcast 10.42.0.255
