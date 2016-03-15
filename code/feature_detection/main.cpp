@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "feature_detection.hpp"
+#include "object.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 
@@ -54,8 +55,10 @@ int main(int argc, char** argv)
 
     //FT.draw_lines();
     FT.filter_houghlines();
+    FT.draw_objects();
     FT.draw_filtered_lines();
 
+    FT.identify_objects();
 
     FT.show_source();
     //FT.show_filter();

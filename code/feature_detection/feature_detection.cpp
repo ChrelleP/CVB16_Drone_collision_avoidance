@@ -67,7 +67,7 @@ void feature_detection::draw_filtered_lines()
 {
   for( size_t i = 0; i < filtered_lines.size(); i++ )
   {
-     float rho = filtered_lines[i][0] * source.cols, theta = filtered_lines[i][1] * M_PI;
+     float rho = filtered_lines[i][0], theta = filtered_lines[i][1];
      Point pt1, pt2;
      double a = cos(theta), b = sin(theta);
      double x0 = a*rho, y0 = b*rho;
@@ -78,6 +78,23 @@ void feature_detection::draw_filtered_lines()
      line( source, pt1, pt2, Scalar(0,255,255), 3, CV_AA);
   }
   //cout << "Size of filtered_lines:" << filtered_lines.size() << endl;
+}
+
+void feature_detection::draw_objects()
+{
+  for( size_t i = 0; i < bars.size(); i++ )
+  {
+     float rho = bars[i].re_center(), theta = bars[i].re_angle();
+     cout << "Drawing rho: " << rho << " and theta: " << theta << endl;
+     Point pt1, pt2;
+     double a = cos(theta), b = sin(theta);
+     double x0 = a*rho, y0 = b*rho;
+     pt1.x = cvRound(x0 + 1000*(-b));
+     pt1.y = cvRound(y0 + 1000*(a));
+     pt2.x = cvRound(x0 - 1000*(-b));
+     pt2.y = cvRound(y0 - 1000*(a));
+     line( source, pt1, pt2, Scalar(0,0,255), 3, CV_AA);
+  }
 }
 
 void feature_detection::filter_houghlines()
@@ -153,6 +170,13 @@ void feature_detection::filter_houghlines()
     if(!replace)
       filtered_lines.push_back(Vec2f(temp_rho, temp_theta));
   }
+
+  // Denormalize
+  for(int i = 0; i < filtered_lines.size(); i++)
+  {
+    filtered_lines[i][0] *= source.cols;
+    filtered_lines[i][1] *= M_PI;
+  }
 }
 
 float feature_detection::dst_hspace(Vec2f first, Vec2f second)
@@ -161,12 +185,62 @@ float feature_detection::dst_hspace(Vec2f first, Vec2f second)
   float temp = sqrt( powf(fabs(first[0])-fabs(second[0]), 2) + powf(first[1]-second[1], 2) );
   return temp;
 }
-/*
-vector<Vec2f> feature_detection::getHougLines()
+
+void feature_detection::identify_objects()
 {
-  return HoughLines;
+  for(int i = 0; i < filtered_lines.size(); i++)
+  {
+    bool updated = false;
+
+    for(int k = 0; k < bars.size(); k++)
+    {
+        if( bars[k].update(filtered_lines[i]) )
+        {
+          updated = true;
+          cout << "Updated" << endl;
+          break;
+        }
+    }
+
+    if(!updated)
+    {
+      for(int j = 0; j < filtered_lines.size(); j++)
+      {
+        if(i != j)
+        {
+          float temp_total_angle = (filtered_lines[i][1] - filtered_lines[j][1]);
+          if( temp_total_angle < 0.087 && temp_total_angle > -0.087 ) // 5 degrees
+          {
+            object temp(filtered_lines[i], filtered_lines[j]);
+            bars.push_back(temp);
+          }
+        }
+      }
+     }
+
+     cout << "Bars: " << bars.size() << endl;
+
+     for(int l = 0; l < bars.size(); l++)
+     {
+       bool temp = bars[l].alive_decount();
+       if(temp)
+       {
+         if(l > 0)
+         {
+           bars.erase(bars.begin()+l);
+           cout << "erasing" << endl;
+         }
+         else
+         {
+           bars.erase(bars.begin());
+           cout << "erasing" << endl;
+         }
+       }
+     }
+
+  }
 }
-*/
+
 feature_detection::~feature_detection()
 {
 

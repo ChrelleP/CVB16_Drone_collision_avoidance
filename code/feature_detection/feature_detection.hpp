@@ -17,6 +17,7 @@
 #include <iostream>
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+#include "object.hpp"
 #include <math.h>
 
 using namespace std;
@@ -40,10 +41,13 @@ class feature_detection
 
     void draw_lines();
     void draw_filtered_lines();
+    void draw_objects();
+
     void filter_houghlines();
+
     float dst_hspace(Vec2f first, Vec2f second);
 
-    //vector<Vec2f> getHougLines();
+    void identify_objects();
 
   	~feature_detection();
 
@@ -57,4 +61,6 @@ class feature_detection
 
     vector<Vec2f> hough_lines;
     vector<Vec2f> filtered_lines;
+
+    vector<object> bars;
 };
