@@ -5,3 +5,9 @@ Bachelor project for SDU.
 
 The aim is to build a solution for a drone to avoid collision with beams and bars in a
 greenhouse environment.
+
+
+
+
+To compile and work on Raspberry Pi code, type the following before execution:
+workon cv
