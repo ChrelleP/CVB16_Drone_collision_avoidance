@@ -5,3 +5,7 @@ Bachelor project for SDU.
 
 The aim is to build a solution for a drone to avoid collision with beams and bars in a
 greenhouse environment.
+
+
+Compiling on Raspberry Pi may need the following command to set up the virtual environment: 
+~/CVB16_Drone_collision_avoidance$ workon cv
