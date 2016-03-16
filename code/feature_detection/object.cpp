@@ -13,8 +13,8 @@ object::object(Vec2f first_line, Vec2f second_line)
   upper_angle = max(first_line[1], second_line[1]);
   angle = (upper_angle + lower_angle)/2;
 
-  lower_feature = min(first_line[0], second_line[0]);
-  upper_feature = max(first_line[0], second_line[0]);
+  lower_feature = min_abs(first_line[0], second_line[0]);
+  upper_feature = max_abs(first_line[0], second_line[0]);
   width = abs(upper_feature) - abs(lower_feature);
 
   if(lower_feature < 0)
@@ -25,7 +25,8 @@ object::object(Vec2f first_line, Vec2f second_line)
   if(angle >= 0 && angle <= M_PI/2)
     center = abs(center);
 
-  alive_count = 10;
+  alive_count_upper = 10;
+  alive_count_lower = 10;
 
   cout << "---New object---" << endl;
   cout << "angle: " << angle << endl;
@@ -35,31 +36,28 @@ object::object(Vec2f first_line, Vec2f second_line)
 
 bool object::update(Vec2f &line)
 {
-  float diff_rho1 = line[0] - lower_feature;
-  float diff_rho2 = line[0] - upper_feature;
+  bool cl_feat = closest_feature(line);
+  float diff_rho;
+
+  if(cl_feat)
+    diff_rho = line[0] - upper_feature;
+  else
+    diff_rho = line[0] - lower_feature;
+
   float diff_theta = line[1] - angle;
 
-  if( diff_theta < 0.087 && diff_theta > -0.087 )
+  if( abs(diff_theta) < 0.087 )
   {
-    if( diff_rho1 < 10 && diff_rho1 > -10 )
+    if( abs(diff_rho) < 10 )
     {
-      alive_count = 10;
+      alive_count_lower = 10;
       angle = line[1];
-      lower_feature = line[0];
-      width = abs(upper_feature) - abs(lower_feature);
 
-      if(lower_feature < 0)
-        center = lower_feature - (width / 2);
+      if(cl_feat)
+        upper_feature = line[0];
       else
-        center = lower_feature + (width / 2);
+        lower_feature = line[0];
 
-      return true;
-    }
-    else if( diff_rho2 < 10 && diff_rho2 > -10 )
-    {
-      alive_count = 10;
-      angle = line[1];
-      upper_feature = line[0];
       width = abs(upper_feature) - abs(lower_feature);
 
       if(lower_feature < 0)
@@ -76,16 +74,17 @@ bool object::update(Vec2f &line)
 
 bool object::alive_decount()
 {
-  if(alive_count > 0)
+  if(alive_count_lower > 0 && alive_count_upper > 0)
   {
-    alive_count--;
+    alive_count_lower--;
+    alive_count_upper--;
     return false;
   }
   else
     return true;
 }
 
-float object::max(float &a, float &b)
+float object::max_abs(float &a, float &b)
 {
   if( abs(a) < abs(b) )
     return b;
@@ -93,12 +92,39 @@ float object::max(float &a, float &b)
     return a;
 }
 
-float object::min(float &a, float &b)
+float object::min_abs(float &a, float &b)
 {
   if( abs(a) > abs(b) )
     return b;
   else
     return a;
+}
+
+float object::max(float &a, float &b)
+{
+  if( a < b )
+    return b;
+  else
+    return a;
+}
+
+float object::min(float &a, float &b)
+{
+  if( a > b )
+    return b;
+  else
+    return a;
+}
+
+bool object::closest_feature(Vec2f &line)
+{
+  float diff_lower = abs(line[0] - lower_feature);
+  float diff_upper = abs(line[0] - upper_feature);
+
+  if(diff_lower < diff_upper)
+    return false;
+  else
+    return true;
 }
 
 float object::re_angle()

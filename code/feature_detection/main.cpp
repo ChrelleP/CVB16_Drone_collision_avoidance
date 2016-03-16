@@ -53,15 +53,13 @@ int main(int argc, char** argv)
     FT.edges(lb_canny,ub_canny,as_canny);         // Find edges with canny
     FT.lines(rho,theta,threshold);                // Find lines through Hough
 
-    //FT.draw_lines();
     FT.filter_houghlines();
-    FT.draw_objects();
-    FT.draw_filtered_lines();
-
     FT.identify_objects();
 
+    FT.draw_objects();
+
     FT.show_source();
-    //FT.show_filter();
+    FT.show_filter();
     //FT.show_edge_map();
 
 /*

@@ -28,6 +28,10 @@ class object
 
     float max(float &a, float &b);
     float min(float &a, float &b);
+    float max_abs(float &a, float &b);
+    float min_abs(float &a, float &b);
+
+    bool closest_feature(Vec2f &line);    // True = Upper | False = Lower
 
     float re_angle();
     float re_center();
@@ -46,5 +50,6 @@ class object
     float upper_feature;
 
     float angle;
-    int alive_count;
+    int alive_count_upper;
+    int alive_count_lower;
 };
