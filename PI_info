@@ -5,3 +5,11 @@ Pi interface:
 	netmask 255.255.255.0
 	gateway 10.42.0.1
 	broadcast 10.42.0.255
+
+NOTE: To compile programs with wiringPi, you need to add:
+    -lwiringPi
+  to your compile line(s) To use the Gertboard, MaxDetect, etc.
+  code (the devLib), you need to also add:
+    -lwiringPiDev
+  to your compile line(s).
+
