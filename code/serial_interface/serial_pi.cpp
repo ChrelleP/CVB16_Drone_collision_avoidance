@@ -48,3 +48,8 @@ bool serial_pi::uart_setup()
 
   return true;
 }
+
+serial_pi::~serial_pi()
+{
+
+}
