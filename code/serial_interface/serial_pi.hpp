@@ -28,8 +28,6 @@ class serial_pi
     void uart_tx();
     void uart_rx();
 
-
-
     ~serial_pi();
 
   private:
