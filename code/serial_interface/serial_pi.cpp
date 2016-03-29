@@ -3,17 +3,16 @@
 serial_pi::serial_pi()
 {
   if( uart_setup() )
-    printf("--UART setup done--");
+    printf("--UART setup done--\n");
   else
-    printf("!! ERROR - Setup was unsuccesfull !!");
+    printf("!! ERROR - Setup was unsuccesfull !!\n");
 }
 
 // THIS CODE IS INSPIRED BY THE INFORMATION FOUND ON: http://www.raspberry-projects.com/pi/programming-in-c/uart-serial-port/using-the-uart
 bool serial_pi::uart_setup()
 {
-  // Generate a variable for the file descriptor
-  int uart0_filestream = -1;
-
+  // Set filestream to -1, will be changed if everything opens correctly.
+  uart0_filestream = -1;
 
   // O_RDWR   - Open for reading and writing.
   // O_NOCTTY - When set and path identifies a terminal device,
@@ -23,8 +22,8 @@ bool serial_pi::uart_setup()
 	//            immediately with a failure status if the output can't be written immediately.
 
   // Open device AMA0 - The UART on the Raspberry Pi
-  // IMPORTANT: On the 3. generation Pi, the AMA0 is used for the bluetooth module - UART is now ...
-  uart0_filestream = open("/dev/ttyAMA0", O_RDWR | O_NOCTTY | O_NDELAY);
+  // IMPORTANT: On the 3. generation Pi, the AMA0 is used for the bluetooth module - UART is now ttyS0
+  uart0_filestream = open("/dev/ttyS0", O_RDWR | O_NOCTTY | O_NDELAY);
 	if (uart0_filestream == -1)
 	{
 		//Error message if serial port cannot open
@@ -47,6 +46,54 @@ bool serial_pi::uart_setup()
   	tcsetattr(uart0_filestream, TCSANOW, &options);
 
   return true;
+}
+
+serial_pi::uart_tx()
+{
+    //----- TX BYTES -----
+  unsigned char tx_buffer[20];
+  unsigned char *p_tx_buffer;
+
+  p_tx_buffer = &tx_buffer[0];
+  *p_tx_buffer++ = 'H';
+  *p_tx_buffer++ = 'e';
+  *p_tx_buffer++ = 'l';
+  *p_tx_buffer++ = 'l';
+  *p_tx_buffer++ = 'o';
+
+  if (uart0_filestream != -1)
+  {
+    int count = write(uart0_filestream, &tx_buffer[0], (p_tx_buffer - &tx_buffer[0]));		//Filestream, bytes to write, number of bytes to write
+    if (count < 0)
+    {
+      printf("UART TX error\n");
+    }
+  }
+}
+
+serial_pi::uart_rx()
+{
+  //----- CHECK FOR ANY RX BYTES -----
+	if (uart0_filestream != -1)
+	{
+		// Read up to 255 characters from the port if they are there
+		unsigned char rx_buffer[256];
+		int rx_length = read(uart0_filestream, (void*)rx_buffer, 255);		//Filestream, buffer to store in, number of bytes to read (max)
+		if (rx_length < 0)
+		{
+			//An error occured (will occur if there are no bytes)
+		}
+		else if (rx_length == 0)
+		{
+			//No data waiting
+		}
+		else
+		{
+			//Bytes received
+			rx_buffer[rx_length] = '\0';
+			printf("%i bytes read : %s\n", rx_length, rx_buffer);
+		}
+	}
 }
 
 serial_pi::~serial_pi()

@@ -32,6 +32,8 @@ class serial_pi
 
   private:
 
+    int uart0_filestream;
+
     bool uart_setup();
 
 };

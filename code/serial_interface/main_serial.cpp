@@ -24,8 +24,11 @@ void *UART(void *arg)
 
    serial_pi uart_fs;
 
+   uart_fs.uart_tx();
+   uart_fs.uart_rx();
+
    pthread_mutex_lock( &data_mutex );
-   printf("Throttle: %d\n", serial_data.throttle);
+   printf("\nThrottle: %d\n", serial_data.throttle);
    printf("Yaw: %d\n", serial_data.yaw);
    printf("Pitch: %d\n", serial_data.pitch);
    printf("Rotate: %d\n", serial_data.rotate);
