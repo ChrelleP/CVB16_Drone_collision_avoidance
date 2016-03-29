@@ -22,7 +22,7 @@ pthread_mutex_t data_mutex = PTHREAD_MUTEX_INITIALIZER;
 void *UART(void *arg)
 {
 
-   //serial_pi uart_fs;
+   serial_pi uart_fs;
 
    pthread_mutex_lock( &data_mutex );
    printf("Throttle: %d\n", serial_data.throttle);
