@@ -32,7 +32,7 @@ class serial_pi
 
   private:
 
-    int uart0_filestream;
+    int uart0_filestream_test;
 
     bool uart_setup();
 

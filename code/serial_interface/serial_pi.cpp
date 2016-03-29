@@ -12,7 +12,7 @@ serial_pi::serial_pi()
 bool serial_pi::uart_setup()
 {
   // Set filestream to -1, will be changed if everything opens correctly.
-  uart0_filestream = -1;
+  int uart0_filestream = -1;
 
   // O_RDWR   - Open for reading and writing.
   // O_NOCTTY - When set and path identifies a terminal device,
@@ -81,10 +81,12 @@ void serial_pi::uart_rx()
 		int rx_length = read(uart0_filestream, (void*)rx_buffer, 255);		//Filestream, buffer to store in, number of bytes to read (max)
 		if (rx_length < 0)
 		{
+      printf("Error encountered RX length < 0\n");
 			//An error occured (will occur if there are no bytes)
 		}
 		else if (rx_length == 0)
 		{
+      printf("No data waiting - RX Length = 0\n");
 			//No data waiting
 		}
 		else
