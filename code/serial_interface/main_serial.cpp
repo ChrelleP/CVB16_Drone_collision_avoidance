@@ -24,11 +24,15 @@ void *UART(void *arg)
 
    serial_pi uart_fs;
 
-   uart_fs.uart_tx();
-   sleep(10);
-   uart_fs.uart_rx();
+   unsigned char transmit = 'a';
+   uart_fs.uart_tx(transmit);
 
-   uart_fs.close_UART();
+   while(uart_fs.available_data() == 0)
+   {
+     sleep(1);
+   }
+
+   uart_fs.uart_rx();
 
    pthread_mutex_lock( &data_mutex );
    printf("\nThrottle: %d\n", serial_data.throttle);

@@ -17,6 +17,7 @@
 #include <unistd.h>			//Used for UART
 #include <fcntl.h>			//Used for UART
 #include <termios.h>		//Used for UART
+#include <sys/ioctl.h>  //Used for UART
 
 
 class serial_pi
@@ -25,7 +26,8 @@ class serial_pi
 
     serial_pi();
 
-    void uart_tx();
+    int available_data();
+    void uart_tx(const unsigned char x);
     void uart_rx();
 
     void close_UART();

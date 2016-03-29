@@ -43,8 +43,8 @@ bool serial_pi::uart_setup()
   	options.c_oflag = 0;
   	options.c_lflag = 0;
   	tcflush(uart0_filestream, TCIFLUSH);
-  	tcsetattr(uart0_filestream, TCSANOW, &options);	
-  
+  	tcsetattr(uart0_filestream, TCSANOW, &options);
+
   return true;
 }
 
@@ -53,22 +53,19 @@ void serial_pi::uart_flush()
   tcflush (uart0_filestream, TCIOFLUSH) ;
 }
 
-void serial_pi::uart_tx()
+int serial_pi::available_data()
 {
-    //----- TX BYTES -----
-  unsigned char tx_buffer[20];
-  unsigned char *p_tx_buffer;
+  int data;
+  if (ioctl (uart0_filestream, FIONREAD, &data) == -1)
+    return -1 ;
+  return data ;
+}
 
-  p_tx_buffer = &tx_buffer[0];
-  *p_tx_buffer++ = 'H';
-  *p_tx_buffer++ = 'e';
-  *p_tx_buffer++ = 'l';
-  *p_tx_buffer++ = 'l';
-  *p_tx_buffer++ = 'o';
-
+void serial_pi::uart_tx(const unsigned char x)
+{
   if (uart0_filestream != -1)
   {
-    int count = write(uart0_filestream, &tx_buffer[0], (p_tx_buffer - &tx_buffer[0]));		//Filestream, bytes to write, number of bytes to write
+    int count = write(uart0_filestream, &x, 1);		//Filestream, bytes to write, number of bytes to write
     if (count < 0)
     {
       printf("UART TX error\n");
@@ -78,12 +75,11 @@ void serial_pi::uart_tx()
 
 void serial_pi::uart_rx()
 {
+  unsigned char y;
   //----- CHECK FOR ANY RX BYTES -----
 	if (uart0_filestream != -1)
 	{
-		// Read up to 255 characters from the port if they are there
-		unsigned char rx_buffer[256];
-		int rx_length = read(uart0_filestream, (void*)rx_buffer, 255);		//Filestream, buffer to store in, number of bytes to read (max)
+		int rx_length = read(uart0_filestream, &y, 1);		//Filestream, buffer to store in, number of bytes to read (max)
 		if (rx_length < 0)
 		{
       printf("Error encountered RX length < 0\n");
@@ -97,9 +93,7 @@ void serial_pi::uart_rx()
 		else
 		{
 			//Bytes received
-			rx_buffer[rx_length] = '\0';
-			printf("%i bytes read : %c\n", rx_length, rx_buffer);
-			printf("buffer1: %c", rx_buffer[0]);
+			printf("Char read : %c\n", y);
 		}
 	}
 }
