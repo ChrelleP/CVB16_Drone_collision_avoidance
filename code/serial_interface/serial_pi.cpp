@@ -48,7 +48,7 @@ bool serial_pi::uart_setup()
   return true;
 }
 
-serial_pi::uart_tx()
+void serial_pi::uart_tx()
 {
     //----- TX BYTES -----
   unsigned char tx_buffer[20];
@@ -71,7 +71,7 @@ serial_pi::uart_tx()
   }
 }
 
-serial_pi::uart_rx()
+void serial_pi::uart_rx()
 {
   //----- CHECK FOR ANY RX BYTES -----
 	if (uart0_filestream != -1)
