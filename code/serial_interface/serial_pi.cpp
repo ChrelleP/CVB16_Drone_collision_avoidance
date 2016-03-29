@@ -12,7 +12,7 @@ serial_pi::serial_pi()
 bool serial_pi::uart_setup()
 {
   // Set filestream to -1, will be changed if everything opens correctly.
-  int uart0_filestream = -1;
+  uart0_filestream = -1;
 
   // O_RDWR   - Open for reading and writing.
   // O_NOCTTY - When set and path identifies a terminal device,
@@ -43,9 +43,14 @@ bool serial_pi::uart_setup()
   	options.c_oflag = 0;
   	options.c_lflag = 0;
   	tcflush(uart0_filestream, TCIFLUSH);
-  	tcsetattr(uart0_filestream, TCSANOW, &options);
-
+  	tcsetattr(uart0_filestream, TCSANOW, &options);	
+  
   return true;
+}
+
+void serial_pi::uart_flush()
+{
+  tcflush (uart0_filestream, TCIOFLUSH) ;
 }
 
 void serial_pi::uart_tx()
@@ -93,9 +98,15 @@ void serial_pi::uart_rx()
 		{
 			//Bytes received
 			rx_buffer[rx_length] = '\0';
-			printf("%i bytes read : %s\n", rx_length, rx_buffer);
+			printf("%i bytes read : %c\n", rx_length, rx_buffer);
+			printf("buffer1: %c", rx_buffer[0]);
 		}
 	}
+}
+
+void serial_pi::close_UART()
+{
+  close(uart0_filestream);
 }
 
 serial_pi::~serial_pi()

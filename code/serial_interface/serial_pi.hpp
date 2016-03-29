@@ -28,12 +28,15 @@ class serial_pi
     void uart_tx();
     void uart_rx();
 
+    void close_UART();
+
     ~serial_pi();
 
   private:
 
-    int uart0_filestream_test;
+    int uart0_filestream;
 
     bool uart_setup();
+    void uart_flush();
 
 };
