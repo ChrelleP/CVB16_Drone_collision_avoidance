@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include "stdio.h"
 #include "serial_pi.hpp"
+#include "wiringSerial.h"
 
 using namespace std;
 
@@ -22,7 +23,24 @@ pthread_mutex_t data_mutex = PTHREAD_MUTEX_INITIALIZER;
 void *UART(void *arg)
 {
 
-   serial_pi uart_fs;
+   int uart_fd;
+
+   if((uart_fd = serialOpen ("/dev/ttyS0", 115200)) < 0)
+   {
+     cout << "Cannot open serial device" << endl;
+     return 1 ;
+   }
+
+   while(true){
+
+     while (serialDataAvail (uart_fd))
+     {
+       printf (" %3d", serialGetchar (fd)) ;
+     }
+
+   }
+
+   /*serial_pi uart_fs;
 
    unsigned char transmit = 'a';
    uart_fs.uart_tx(transmit);
@@ -32,7 +50,7 @@ void *UART(void *arg)
      sleep(1);
    }
 
-   uart_fs.uart_rx();
+   uart_fs.uart_rx();*/
 
    pthread_mutex_lock( &data_mutex );
    printf("\nThrottle: %d\n", serial_data.throttle);
