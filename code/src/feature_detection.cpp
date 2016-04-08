@@ -23,7 +23,7 @@ void feature_detection::edges(int &lb, int &ub, int &as)
   Canny(filtered, edge_map, lb, ub, as);
 }
 
-void feature_detection::lines(float &rho, float &theta, int &threshold)
+void feature_detection::lines(int &rho, float &theta, int &threshold)
 {
   HoughLines(edge_map, hough_lines, rho, theta, threshold, 0, 0);
 }
