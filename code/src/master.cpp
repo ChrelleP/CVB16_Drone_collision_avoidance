@@ -59,7 +59,7 @@ pthread_mutex_t reaction_mutex = PTHREAD_MUTEX_INITIALIZER;
 void *CV_avoid(void *arg)
 {
    //------------- Create objects and variables -------------
-   feature_detection FT();   // Feature Detection object - used for CV methods
+   feature_detection FT;   // Feature Detection object - used for CV methods
    VideoCapture cap(0);       // Video Capture object - used to get frames from video
 
    //------------------ While loop ---------------------------
