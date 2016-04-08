@@ -8,22 +8,23 @@
 using namespace std;
 using namespace cv;
 
-int main(int argc, char** argv)
+//int main(int argc, char** argv)
+int main()
 {
   //----------------- Get video filename ------------------
-  const char* filename;
+ /* const char* filename;
 
   if(argc == 2)
     filename = argv[1];
   else{
     cout << "Specify a name for video" << endl;
     return 0;
-  }
+  }*/
   //--------------------------------------------------------
 
   //------------- Create objects and variables -------------
-  feature_detection FT(filename);   // Feature Detection object - used for CV methods
-  VideoCapture cap(filename);       // Video Capture object - used to get frames from video
+  feature_detection FT(0);   // Feature Detection object - used for CV methods
+  VideoCapture cap(0);       // Video Capture object - used to get frames from video
 
   int lb_mask = 65;                 // Lower bound for mask
   int ub_mask = 98;                // Upper bound for mask
@@ -69,7 +70,7 @@ int main(int argc, char** argv)
     myfile.close();
 */
 
-    if(waitKey(100) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
+    if(waitKey(10) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
     {
       cout << "esc key is pressed by user" << endl;
       break;
