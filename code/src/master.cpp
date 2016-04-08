@@ -82,9 +82,9 @@ void *CV_avoid(void *arg)
      FT.filter_houghlines();
      FT.identify_objects();
 
-     FT.draw_objects();
+     //FT.draw_objects();
 
-     FT.show_source();
+     //FT.show_source();
      //FT.show_filter();
      //FT.show_edge_map();
 
@@ -111,13 +111,13 @@ int main ()
   serialFlush(fd);
 
   // -------- Start threads -------
-  pthread_t CV_thread;
+  /*pthread_t CV_thread;
   int CV_rc;
 
   CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
   if( CV_rc )
     printf("Thread creation failed: %d\n", CV_rc);
-
+  */
   // ------ Variables -------------
   int state = STATE_FEEDBACK;
   int local_reaction;
@@ -127,11 +127,25 @@ int main ()
   data_packet RX;
   data_packet TX;
 
+  int temp_byte;
+  int lowbyte;
+  int highbyte;
+
   // ------- Main loop -----------
   while(abort)
   {
     // --------- Recieve -----------
-    // RX.receive()
+    if( serialDataAvail(int fd) )
+    {
+      temp_byte = serialGetchar(fd);
+
+
+      if()
+      {
+
+      }
+
+    }
 
     // --------- State machine ----------
     // Retrieve reaction
@@ -189,7 +203,7 @@ int main ()
 
   }
 
-  pthread_join( CV_thread, NULL);
+  //pthread_join( CV_thread, NULL);
 
   return 0;
 }
