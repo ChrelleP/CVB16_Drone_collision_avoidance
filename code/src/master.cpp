@@ -21,18 +21,6 @@ using namespace cv;
 
 // ----------------------------- DEFINES ---------------------------------------
 
-#define LB_MASK              65                 // Lower bound for mask
-#define UB_MASK              98                 // Upper bound for mask
-#define AS_MEDIAN            7                  // Apperture size for median filter
-
-#define LB_CANNY             150                // Lower bound for canny
-#define UB_CANNY             200                // Upper bound for canny
-#define AS_CANNY             3                  // Apperture size for canny filter
-
-#define RHO                  1                  // Rho used for HoughTransform
-#define THETA                3.1416/245         // Theta used for HoughTransform
-#define THRESHOLD            110                // Threshold for HoughTransform
-
 #define STATE_FEEDBACK       1
 #define STATE_STOP           2
 #define STATE_AVOID          3
@@ -61,6 +49,20 @@ void *CV_avoid(void *arg)
    //------------- Create objects and variables -------------
    feature_detection FT;   // Feature Detection object - used for CV methods
    VideoCapture cap(0);       // Video Capture object - used to get frames from video
+
+   //------------- Variables --------------------------------
+
+   int LB_MASK = 65                 // Lower bound for mask
+   int UB_MASK = 98                 // Upper bound for mask
+   int AS_MEDIAN = 7                  // Apperture size for median filter
+
+   int LB_CANNY = 150                // Lower bound for canny
+   int UB_CANNY = 200                // Upper bound for canny
+   int AS_CANNY             3                  // Apperture size for canny filter
+
+   float RHO                  1                  // Rho used for HoughTransform
+   float THETA                3.1416/245         // Theta used for HoughTransform
+   int THRESHOLD            110                // Threshold for HoughTransform
 
    //------------------ While loop ---------------------------
    while(true)

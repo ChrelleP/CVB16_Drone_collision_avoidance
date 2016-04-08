@@ -33,7 +33,7 @@ class feature_detection
 
     void filter(int &lb, int &ub, int &as);
     void edges(int &lb, int &ub, int &as);
-    void lines(int &rho, float &theta, int &threshold);
+    void lines(float &rho, float &theta, int &threshold);
 
     void show_source();
     void show_filter();
