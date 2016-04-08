@@ -73,7 +73,7 @@ void *CV_avoid(void *arg)
        break;
      }
 
-     FT.filter(LB_MASK, UB_MASK, AS_MEDIAN);         // Filter the image
+     FT.filter(65, 98, 7);         // Filter the image
      FT.edges(LB_CANNY, UB_CANNY, AS_CANNY);         // Find edges with canny
      FT.lines(RHO, THETA, THRESHOLD);                // Find lines through Hough
 
