@@ -10,7 +10,6 @@
 #include <iostream>
 #include <fstream>
 #include "stdio.h"
-#include "serial_pi.hpp"
 #include "wiringSerial.h"
 #include "feature_detection.hpp"
 #include "object.hpp"
@@ -57,97 +56,11 @@ volatile int global_reaction;
 pthread_mutex_t reaction_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // --------------------------- FUNCTIONS ---------------------------------------
-int main ()
-{
-    // -------- Start threads -------
-    pthread_t CV_thread;
-    int CV_rc;
-
-    CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
-    if( CV_rc )
-      printf("Thread creation failed: %d\n", CV_rc);
-
-    // ------ Variables -------------
-    int state = STATE_FEEDBACK;
-    int local_reaction;
-
-    bool abort = false;
-
-    data_packet RX;
-    data_packet TX;
-
-    // ------- Main loop -----------
-    while(abort)
-    {
-      // --------- Recieve -----------
-      // RX.receive()
-
-      // --------- State machine ----------
-      // Retrieve reaction
-      pthread_mutex_lock( &reaction_mutex );
-      local_reaction = global_reaction;
-      pthread_mutex_unlock( &reaction_mutex );
-
-      // Switch on the state
-      switch(state)
-      {
-        case STATE_FEEDBACK:
-            // _________ FEEDBACK STATE _____________
-            // RX -> TX
-
-            TX.throttle = RX.throttle;
-            TX.pitch = RX.pitch;
-            //...
-
-            // Update state
-
-            switch(local_reaction)
-            {
-              case REACT_STOP: state = STATE_STOP;
-                               break;
-              case REACT_LEFT: state = STATE_STOP;
-                               break;
-              case default: cout << "Error in state change" << endl;
-                            break;
-            }
-            break;
-        case STATE_STOP:
-            // _________ STOP STATE _________________
-            // Keep constant throttle, everything else 0.
-
-            TX.throttle = RX.throttle;
-
-            // Update state
-            switch(local_reaction)
-            {
-              case REACT_STOP: state = STATE_STOP;
-                               break;
-              case REACT_LEFT: state = STATE_STOP;
-                               break;
-              case default: cout << "Error in state change" << endl;
-                            break;
-            }
-            break;
-         case default: cout << "Error in state" << endl;
-                       break;
-      }
-
-      // -------- TRANSMIT ---------------
-      // TX.transmit();
-
-
-    }
-
-    pthread_join( uart_thread, NULL);
-
-    return 0;
-}
-
 void *CV_avoid(void *arg)
 {
    //------------- Create objects and variables -------------
-   feature_detection FT(filename);   // Feature Detection object - used for CV methods
-   VideoCapture cap(filename);       // Video Capture object - used to get frames from video
+   feature_detection FT(0);   // Feature Detection object - used for CV methods
+   VideoCapture cap(0);       // Video Capture object - used to get frames from video
 
    //------------------ While loop ---------------------------
    while(true)
@@ -170,10 +83,10 @@ void *CV_avoid(void *arg)
      FT.draw_objects();
 
      FT.show_source();
-     FT.show_filter();
+     //FT.show_filter();
      //FT.show_edge_map();
 
-     if(waitKey(100) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
+     if(waitKey(10) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
      {
        cout << "esc key is pressed by user" << endl;
        break;
@@ -181,4 +94,100 @@ void *CV_avoid(void *arg)
    }
 
    pthread_exit(NULL);
+}
+
+int main ()
+{
+  // -------- Open Serial ---------
+  int fd; // File descriptor for AMA0
+
+  if ((fd = serialOpen ("/dev/ttyAMA0", 115200)) < 0)
+  {
+    printf ("Unable to open serial device") ;
+  }
+
+  serialFlush(fd);
+
+  // -------- Start threads -------
+  pthread_t CV_thread;
+  int CV_rc;
+
+  CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
+  if( CV_rc )
+    printf("Thread creation failed: %d\n", CV_rc);
+
+  // ------ Variables -------------
+  int state = STATE_FEEDBACK;
+  int local_reaction;
+
+  bool abort = false;
+
+  data_packet RX;
+  data_packet TX;
+
+  // ------- Main loop -----------
+  while(abort)
+  {
+    // --------- Recieve -----------
+    // RX.receive()
+
+    // --------- State machine ----------
+    // Retrieve reaction
+    pthread_mutex_lock( &reaction_mutex );
+    local_reaction = global_reaction;
+    pthread_mutex_unlock( &reaction_mutex );
+
+    // Switch on the state
+    switch(state)
+    {
+      case STATE_FEEDBACK:
+          // _________ FEEDBACK STATE _____________
+          // RX -> TX
+
+          TX.throttle = RX.throttle;
+          TX.pitch = RX.pitch;
+          //...
+
+          // Update state
+
+          switch(local_reaction)
+          {
+            case REACT_STOP: state = STATE_STOP;
+                             break;
+            case REACT_LEFT: state = STATE_STOP;
+                             break;
+            case default: cout << "Error in state change" << endl;
+                          break;
+          }
+          break;
+      case STATE_STOP:
+          // _________ STOP STATE _________________
+          // Keep constant throttle, everything else 0.
+
+          TX.throttle = RX.throttle;
+
+          // Update state
+          switch(local_reaction)
+          {
+            case REACT_STOP: state = STATE_STOP;
+                             break;
+            case REACT_LEFT: state = STATE_STOP;
+                             break;
+            case default: cout << "Error in state change" << endl;
+                          break;
+          }
+          break;
+       case default: cout << "Error in state" << endl;
+                     break;
+    }
+
+    // -------- TRANSMIT ---------------
+    // TX.transmit();
+
+
+  }
+
+  pthread_join( CV_thread, NULL);
+
+  return 0;
 }
