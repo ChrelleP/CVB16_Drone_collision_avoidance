@@ -73,7 +73,7 @@ void *CV_avoid(void *arg)
        break;
      }
 
-     FT.filter(65, 98, 7);         // Filter the image
+     FT.filter(LB_MASK, UB_MASK, AS_MEDIAN);         // Filter the image
      FT.edges(LB_CANNY, UB_CANNY, AS_CANNY);         // Find edges with canny
      FT.lines(RHO, THETA, THRESHOLD);                // Find lines through Hough
 
@@ -156,7 +156,7 @@ int main ()
                              break;
             case REACT_LEFT: state = STATE_STOP;
                              break;
-            case default: cout << "Error in state change" << endl;
+            default: cout << "Error in state change" << endl;
                           break;
           }
           break;
@@ -173,11 +173,11 @@ int main ()
                              break;
             case REACT_LEFT: state = STATE_STOP;
                              break;
-            case default: cout << "Error in state change" << endl;
+            default: cout << "Error in state change" << endl;
                           break;
           }
           break;
-       case default: cout << "Error in state" << endl;
+       default: cout << "Error in state" << endl;
                      break;
     }
 
