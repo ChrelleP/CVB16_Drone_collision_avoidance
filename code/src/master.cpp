@@ -101,24 +101,16 @@ void *CV_avoid(void *arg)
 
 int main ()
 {
-  // -------- Open Serial ---------
-  int fd; // File descriptor for AMA0
+  // -------- Startup ---------
+  DSM_RX_TX();
 
-  if ((fd = serialOpen ("/dev/ttyAMA0", 115200)) < 0)
-  {
-    printf ("Unable to open serial device") ;
-  }
-
-  serialFlush(fd);
-
-  // -------- Start threads -------
-  /*pthread_t CV_thread;
+  pthread_t CV_thread;
   int CV_rc;
 
   CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
   if( CV_rc )
     printf("Thread creation failed: %d\n", CV_rc);
-  */
+
   // ------ Variables -------------
   int state = STATE_FEEDBACK;
   int local_reaction;
@@ -136,6 +128,7 @@ int main ()
   while(abort)
   {
     // --------- Recieve -----------
+    DSM_analyse(true);
 
     // --------- State machine ----------
     // Retrieve reaction
