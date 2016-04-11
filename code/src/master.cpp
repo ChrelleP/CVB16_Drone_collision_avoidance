@@ -15,6 +15,7 @@
 #include "object.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+#include "DSM_analyser.hpp"
 
 using namespace std;
 using namespace cv;
@@ -135,17 +136,6 @@ int main ()
   while(abort)
   {
     // --------- Recieve -----------
-    if( serialDataAvail(int fd) )
-    {
-      temp_byte = serialGetchar(fd);
-
-
-      if()
-      {
-
-      }
-
-    }
 
     // --------- State machine ----------
     // Retrieve reaction
@@ -196,11 +186,6 @@ int main ()
        default: cout << "Error in state" << endl;
                      break;
     }
-
-    // -------- TRANSMIT ---------------
-    // TX.transmit();
-
-
   }
 
   //pthread_join( CV_thread, NULL);
