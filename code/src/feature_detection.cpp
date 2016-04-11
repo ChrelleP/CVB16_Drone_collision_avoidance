@@ -270,7 +270,21 @@ void feature_detection::identify_objects()
 }
 float feature_detection::calc_distance()
 {
+  // In order to calculate the distance to the identified objects, a "real" bar width is determined.
+  // For simplicity, this width is estimated to be 75mm.
+  // To calculate the distance to the bars, the focal length needs to be determined.
+  // F = (P x D) / W, where P is the percieved width in pixels, D is the distance to the object,
+  // and W is actual object width.
+  float bar_width = 75;
 
+  focal_length = () / bar_width;
+
+  // When the focal length is calculated, the distance to new objects can be determined.
+  // D = (W x F) / P
+  for(int i 0; i < bars.size(); i++)
+  {
+    distances[i] = ( bar_width * focal_length ) / bars[i][0];
+  }
 }
 void feature_detection::collison_risk()
 {
