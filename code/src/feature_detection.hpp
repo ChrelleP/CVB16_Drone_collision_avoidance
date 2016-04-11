@@ -49,6 +49,10 @@ class feature_detection
 
     void identify_objects();
 
+    float calc_distance();
+
+    void collison_risk();
+
   	~feature_detection();
 
   private:
