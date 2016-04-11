@@ -102,7 +102,7 @@ void *CV_avoid(void *arg)
 int main ()
 {
   // -------- Startup ---------
-  DSM_RX_TX();
+  DSM_RX_TX DSM_UART;
 
   pthread_t CV_thread;
   int CV_rc;
@@ -128,7 +128,7 @@ int main ()
   while(abort)
   {
     // --------- Recieve -----------
-    DSM_analyse(true);
+    DSM_UART.DSM_analyse(true);
 
     // --------- State machine ----------
     // Retrieve reaction
