@@ -15,6 +15,7 @@
 #include "object.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+#include "DSM_analyser.hpp"
 
 using namespace std;
 using namespace cv;
@@ -44,113 +45,10 @@ volatile int global_reaction;
 pthread_mutex_t reaction_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // --------------------------- FUNCTIONS ---------------------------------------
-<<<<<<< HEAD
-int main ()
-{
-  // -------- Open Serial ---------
-  int fd; // File descriptor for AMA0
-
-  if ((fd = serialOpen ("/dev/ttyAMA0", 115200)) < 0)
-  {
-    printf ("Unable to open serial device") ;
-  }
-
-  serialFlush(fd);
-
-  // -------- Start threads -------
-  pthread_t CV_thread;
-  int CV_rc;
-
-  CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
-  if( CV_rc )
-    printf("Thread creation failed: %d\n", CV_rc);
-
-  // ------ Variables -------------
-  int state = STATE_FEEDBACK;
-  int local_reaction;
-
-  bool abort = false;
-
-  data_packet RX;
-  data_packet TX;
-
-  // ------- Main loop -----------
-  while(abort)
-  {
-    // --------- Recieve -----------
-    // RX.receive()
-
-    // --------- State machine ----------
-    // Retrieve reaction
-    pthread_mutex_lock( &reaction_mutex );
-    local_reaction = global_reaction;
-    pthread_mutex_unlock( &reaction_mutex );
-
-    // Switch on the state
-    switch(state)
-    {
-      case STATE_FEEDBACK:
-          // _________ FEEDBACK STATE _____________
-          // RX -> TX
-
-          TX.throttle = RX.throttle;
-          TX.pitch = RX.pitch;
-          //...
-
-          // Update state
-
-          switch(local_reaction)
-          {
-            case REACT_STOP: state = STATE_STOP;
-                             break;
-            case REACT_LEFT: state = STATE_STOP;
-                             break;
-            case default: cout << "Error in state change" << endl;
-                          break;
-          }
-          break;
-      case STATE_STOP:
-          // _________ STOP STATE _________________
-          // Keep constant throttle, everything else 0.
-
-          TX.throttle = RX.throttle;
-
-          // Update state
-          switch(local_reaction)
-          {
-            case REACT_STOP: state = STATE_STOP;
-                             break;
-            case REACT_LEFT: state = STATE_STOP;
-                             break;
-            case default: cout << "Error in state change" << endl;
-                          break;
-          }
-          break;
-       case default: cout << "Error in state" << endl;
-                     break;
-    }
-
-    // -------- TRANSMIT ---------------
-    // TX.transmit();
-
-
-  }
-
-  pthread_join( CV_thread, NULL);
-
-  return 0;
-}
-
-void *CV_avoid(void *arg)
-{
-   //------------- Create objects and variables -------------
-   feature_detection FT(0);   // Feature Detection object - used for CV methods
-=======
 void *CV_avoid(void *arg)
 {
    //------------- Create objects and variables -------------
    feature_detection FT;   // Feature Detection object - used for CV methods
->>>>>>> 2c37b3f3dc0a209104f101d2c5465c29863a894b
    VideoCapture cap(0);       // Video Capture object - used to get frames from video
 
    //------------- Variables --------------------------------
@@ -203,24 +101,16 @@ void *CV_avoid(void *arg)
 
 int main ()
 {
-  // -------- Open Serial ---------
-  int fd; // File descriptor for AMA0
+  // -------- Startup ---------
+  DSM_RX_TX();
 
-  if ((fd = serialOpen ("/dev/ttyAMA0", 115200)) < 0)
-  {
-    printf ("Unable to open serial device") ;
-  }
-
-  serialFlush(fd);
-
-  // -------- Start threads -------
-  /*pthread_t CV_thread;
+  pthread_t CV_thread;
   int CV_rc;
 
   CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
   if( CV_rc )
     printf("Thread creation failed: %d\n", CV_rc);
-  */
+
   // ------ Variables -------------
   int state = STATE_FEEDBACK;
   int local_reaction;
@@ -238,17 +128,7 @@ int main ()
   while(abort)
   {
     // --------- Recieve -----------
-    if( serialDataAvail(int fd) )
-    {
-      temp_byte = serialGetchar(fd);
-
-
-      if()
-      {
-
-      }
-
-    }
+    DSM_analyse(true);
 
     // --------- State machine ----------
     // Retrieve reaction
@@ -299,11 +179,6 @@ int main ()
        default: cout << "Error in state" << endl;
                      break;
     }
-
-    // -------- TRANSMIT ---------------
-    // TX.transmit();
-
-
   }
 
   //pthread_join( CV_thread, NULL);
