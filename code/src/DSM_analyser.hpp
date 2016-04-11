@@ -60,7 +60,7 @@ class DSM_RX_TX
 public: // Methods
     DSM_RX_TX();
     DSM_RX_TX(char* port);
-    void DSM_analyse(bool loop);
+    package DSM_analyse(bool loop, package modified_package);
     void enable_all_max();
     void disable_all_max();
     void change_channel_offsets(int channel1, int channel2, int channel3, int channel4, int channel5, int channel6);
@@ -222,7 +222,7 @@ void DSM_RX_TX::change_packet_values(package &p_in, package &p_out)
     }
 }
 
-void DSM_RX_TX::DSM_analyse(bool loop)
+package DSM_RX_TX::DSM_analyse(bool loop, package modified_package)
 /*****************************************************************************
 *   Input    : If loop=true then it loops otherwise it runs once.
 *   Output   : None
@@ -240,7 +240,17 @@ void DSM_RX_TX::DSM_analyse(bool loop)
                 serialPutchar(ser_handle,serialGetchar(ser_handle));
     }
     else
-        RX_TX();
+    {
+        change_packet_values(modified_package, package_in);
+        while(DSM_STATE == DSM_S_IDLE) // During idle, the packet will be modified
+          RX_TX();
+        while(DSM_STATE != DSM_S_IDLE) // Recieve and transmit a packet
+          RX_TX();
+        return package_in;
+    }
+
+    // This should never happen
+    return package_in;
 }
 
 void DSM_RX_TX::RX_TX()

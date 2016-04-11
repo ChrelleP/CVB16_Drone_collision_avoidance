@@ -104,31 +104,35 @@ int main ()
   // -------- Startup ---------
   DSM_RX_TX DSM_UART;
 
-  pthread_t CV_thread;
+  /*pthread_t CV_thread;
   int CV_rc;
 
   CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
   if( CV_rc )
     printf("Thread creation failed: %d\n", CV_rc);
-
+  */
   // ------ Variables -------------
   int state = STATE_FEEDBACK;
   int local_reaction;
 
   bool abort = false;
 
-  data_packet RX;
-  data_packet TX;
+  package RX;
+  package TX;
 
-  int temp_byte;
-  int lowbyte;
-  int highbyte;
+  TX.channel_value[0] = CHANNEL0_DEFAULT;
+  TX.channel_value[1] = CHANNEL1_DEFAULT;
+  TX.channel_value[2] = CHANNEL2_DEFAULT;
+  TX.channel_value[3] = CHANNEL3_DEFAULT;
+  TX.channel_value[4] = CHANNEL4_DEFAULT;
+  TX.channel_value[5] = CHANNEL5_DEFAULT;
+  TX.channel_value[6] = CHANNEL6_DEFAULT;
 
   // ------- Main loop -----------
-  while(abort)
+  while(!abort)
   {
     // --------- Recieve -----------
-    DSM_UART.DSM_analyse(true);
+    RX = DSM_UART.DSM_analyse(true, TX);
 
     // --------- State machine ----------
     // Retrieve reaction
@@ -141,14 +145,9 @@ int main ()
     {
       case STATE_FEEDBACK:
           // _________ FEEDBACK STATE _____________
-          // RX -> TX
-
-          TX.throttle = RX.throttle;
-          TX.pitch = RX.pitch;
-          //...
+          TX = RX;
 
           // Update state
-
           switch(local_reaction)
           {
             case REACT_STOP: state = STATE_STOP;
@@ -156,6 +155,7 @@ int main ()
             case REACT_LEFT: state = STATE_STOP;
                              break;
             default: cout << "Error in state change" << endl;
+                     abort = true;
                           break;
           }
           break;
@@ -163,8 +163,6 @@ int main ()
           // _________ STOP STATE _________________
           // Keep constant throttle, everything else 0.
 
-          TX.throttle = RX.throttle;
-
           // Update state
           switch(local_reaction)
           {
@@ -173,14 +171,17 @@ int main ()
             case REACT_LEFT: state = STATE_STOP;
                              break;
             default: cout << "Error in state change" << endl;
+                     abort = true;
                           break;
           }
           break;
        default: cout << "Error in state" << endl;
+                abort = true;
                      break;
     }
   }
 
+  DSM_UART.DSM_analyse(true, RX);
   //pthread_join( CV_thread, NULL);
 
   return 0;
