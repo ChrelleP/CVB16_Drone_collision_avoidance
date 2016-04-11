@@ -37,6 +37,14 @@ class object
     float re_center();
     float re_width();
 
+    bool half_speed;
+    bool full_stop;
+    bool feecback;
+
+    float calc_distance();
+
+    void collison_risk();
+
   	~object();
 
   private:

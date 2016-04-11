@@ -103,15 +103,21 @@ void *CV_avoid(void *arg)
 int main ()
 {
   // -------- Startup ---------
+<<<<<<< HEAD
   DSM_RX_TX DSM_UART;
 
   /*pthread_t CV_thread;
+=======
+  DSM_RX_TX();
+
+  pthread_t CV_thread;
+>>>>>>> a9658f18d0a302f6fe884ab10e6e46bfbf4ec42e
   int CV_rc;
 
   CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
   if( CV_rc )
     printf("Thread creation failed: %d\n", CV_rc);
-  */
+
   // ------ Variables -------------
   int state = STATE_FEEDBACK;
   int local_reaction;
@@ -133,7 +139,11 @@ int main ()
   while(!abort)
   {
     // --------- Recieve -----------
+<<<<<<< HEAD
     RX = DSM_UART.DSM_analyse(false, TX);
+=======
+    DSM_analyse(true);
+>>>>>>> a9658f18d0a302f6fe884ab10e6e46bfbf4ec42e
 
     // --------- State machine ----------
     // Retrieve reaction
