@@ -145,13 +145,13 @@ int main ()
     printf("channel 6 = %d \n", TX.channel_value[6]);
 
     printf("------- Received ----------\n");
-    printf("channel 0 = %d \n", TX.channel_value[0]);
-    printf("channel 1 = %d \n", TX.channel_value[1]);
-    printf("channel 2 = %d \n", TX.channel_value[2]);
-    printf("channel 3 = %d \n", TX.channel_value[3]);
-    printf("channel 4 = %d \n", TX.channel_value[4]);
-    printf("channel 5 = %d \n", TX.channel_value[5]);
-    printf("channel 6 = %d \n", TX.channel_value[6]);
+    printf("channel 0 = %d \n", RX.channel_value[0]);
+    printf("channel 1 = %d \n", RX.channel_value[1]);
+    printf("channel 2 = %d \n", RX.channel_value[2]);
+    printf("channel 3 = %d \n", RX.channel_value[3]);
+    printf("channel 4 = %d \n", RX.channel_value[4]);
+    printf("channel 5 = %d \n", RX.channel_value[5]);
+    printf("channel 6 = %d \n", RX.channel_value[6]);
 
     system("clear");
 
