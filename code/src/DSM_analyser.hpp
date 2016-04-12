@@ -240,11 +240,7 @@ void DSM_RX_TX::change_packet_values(package &p_in, package &p_out)
     }
 }
 
-<<<<<<< HEAD
 package DSM_RX_TX::DSM_analyse(bool loop, package modified_package)
-=======
-void DSM_RX_TX::DSM_analyse(bool loop)
->>>>>>> a9658f18d0a302f6fe884ab10e6e46bfbf4ec42e
 /*****************************************************************************
 *   Input    : If loop=true then it loops otherwise it runs once.
 *   Output   : None
@@ -262,7 +258,6 @@ void DSM_RX_TX::DSM_analyse(bool loop)
                 serialPutchar(ser_handle,serialGetchar(ser_handle));
     }
     else
-<<<<<<< HEAD
     {
         change_packet_values(modified_package, package_in);
         while(DSM_STATE == DSM_S_IDLE) // During idle, the packet will be modified
@@ -275,9 +270,6 @@ void DSM_RX_TX::DSM_analyse(bool loop)
 
     // This should never happen
     return package_in;
-=======
-        RX_TX();
->>>>>>> a9658f18d0a302f6fe884ab10e6e46bfbf4ec42e
 }
 
 void DSM_RX_TX::RX_TX()
