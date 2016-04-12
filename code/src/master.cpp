@@ -135,6 +135,26 @@ int main ()
     // --------- Recieve -----------
     RX = DSM_UART.DSM_analyse(false, TX);
 
+    printf("------- Transmitted -------\n");
+    printf("channel 0 = %d \n", TX.channel_value[0]);
+    printf("channel 1 = %d \n", TX.channel_value[1]);
+    printf("channel 2 = %d \n", TX.channel_value[2]);
+    printf("channel 3 = %d \n", TX.channel_value[3]);
+    printf("channel 4 = %d \n", TX.channel_value[4]);
+    printf("channel 5 = %d \n", TX.channel_value[5]);
+    printf("channel 6 = %d \n", TX.channel_value[6]);
+
+    printf("------- Received ----------\n");
+    printf("channel 0 = %d \n", TX.channel_value[0]);
+    printf("channel 1 = %d \n", TX.channel_value[1]);
+    printf("channel 2 = %d \n", TX.channel_value[2]);
+    printf("channel 3 = %d \n", TX.channel_value[3]);
+    printf("channel 4 = %d \n", TX.channel_value[4]);
+    printf("channel 5 = %d \n", TX.channel_value[5]);
+    printf("channel 6 = %d \n", TX.channel_value[6]);
+
+    system("clear");
+
     // --------- State machine ----------
     // Retrieve reaction
     pthread_mutex_lock( &reaction_mutex );
@@ -146,15 +166,6 @@ int main ()
     {
       case STATE_FEEDBACK:
           // _________ FEEDBACK STATE _____________
-          printf("--Feedback state--\n");
-          printf("channel 0 = %d \n", TX.channel_value[0]);
-          printf("channel 1 = %d \n", TX.channel_value[1]);
-          printf("channel 2 = %d \n", TX.channel_value[2]);
-          printf("channel 3 = %d \n", TX.channel_value[3]);
-          printf("channel 4 = %d \n", TX.channel_value[4]);
-          printf("channel 5 = %d \n", TX.channel_value[5]);
-          printf("channel 6 = %d \n", TX.channel_value[6]);
-          fflush(stdout);
           TX = RX;
 
           // Update state
