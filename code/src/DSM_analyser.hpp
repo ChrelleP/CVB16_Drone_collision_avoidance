@@ -206,7 +206,7 @@ void DSM_RX_TX::get_channel_value(package &p)
 {
    for(int i = 0; i < 7; i++)
    {
-     p.channel_value[i] = ( 256*p.byte_H[i + 1] ) + p.byte_L[i + 1];
+     p.channel_value[i] = ( 256 * (p.byte_H[i + 1] & 7) ) + p.byte_L[i + 1];
    }
 }
 
