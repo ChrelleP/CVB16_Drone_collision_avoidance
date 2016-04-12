@@ -60,11 +60,7 @@ class DSM_RX_TX
 public: // Methods
     DSM_RX_TX();
     DSM_RX_TX(char* port);
-<<<<<<< HEAD
     package DSM_analyse(bool loop, package modified_package);
-=======
-    void DSM_analyse(bool loop);
->>>>>>> a9658f18d0a302f6fe884ab10e6e46bfbf4ec42e
     void enable_all_max();
     void disable_all_max();
     void change_channel_offsets(int channel1, int channel2, int channel3, int channel4, int channel5, int channel6);
