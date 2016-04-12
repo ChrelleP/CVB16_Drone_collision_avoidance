@@ -26,6 +26,7 @@ using namespace cv;
 #define STATE_STOP           2
 #define STATE_AVOID          3
 
+#define REACT_NOTHING        0
 #define REACT_STOP           1
 #define REACT_FEEDBACK       2
 #define REACT_LEFT           3
@@ -113,7 +114,7 @@ int main ()
   */
   // ------ Variables -------------
   int state = STATE_FEEDBACK;
-  int local_reaction;
+  int local_reaction = REACT_NOTHING;
 
   bool abort = false;
 
@@ -154,9 +155,7 @@ int main ()
                              break;
             case REACT_LEFT: state = STATE_STOP;
                              break;
-            default: cout << "Error in state change" << endl;
-                     abort = true;
-                          break;
+            default:         break; // No state change
           }
           break;
       case STATE_STOP:
@@ -170,9 +169,7 @@ int main ()
                              break;
             case REACT_LEFT: state = STATE_STOP;
                              break;
-            default: cout << "Error in state change" << endl;
-                     abort = true;
-                          break;
+            default:         break;
           }
           break;
        default: cout << "Error in state" << endl;
