@@ -36,7 +36,7 @@ typedef struct package{
 #define HIGH                1
 #define LOW                 0
 #define SYNC_TOLERANCE      5
-#define SAFE_ZONE_THRESHOLD 450 // Approximate number of packets ins 10 seconds (packets come with a frequency of ~45,5Hz)
+#define SAFE_ZONE_THRESHOLD 50 // Approximate number of packets ins 10 seconds (packets come with a frequency of ~45,5Hz)
 #define RESET_SYNC_THRESHOLD 700
 #define FATAL_SYNC_THRESHOLD 2000
 #define CHANNEL0_DEFAULT    334
@@ -246,6 +246,7 @@ package DSM_RX_TX::DSM_analyse(bool loop, package modified_package)
           RX_TX();
         while(DSM_STATE != DSM_S_IDLE) // Recieve and transmit a packet
           RX_TX();
+        printf("Package received");
         return package_in;
     }
 
