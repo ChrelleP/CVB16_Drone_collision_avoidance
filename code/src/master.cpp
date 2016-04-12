@@ -133,7 +133,7 @@ int main ()
   while(!abort)
   {
     // --------- Recieve -----------
-    RX = DSM_UART.DSM_analyse(false, TX);
+    RX = DSM_UART.DSM_analyse(true, TX);
 
     // --------- State machine ----------
     // Retrieve reaction
