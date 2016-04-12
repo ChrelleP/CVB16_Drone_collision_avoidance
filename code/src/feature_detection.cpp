@@ -290,7 +290,7 @@ float feature_detection::calc_distance()
   }
   // Return the smallest distance in the vector.
   float shortest_distance = 10000.1;
-  for(int i = 1; i < distances.size(); i++)
+  for(int i = 0; i < distances.size(); i++)
   {
     if(distances[i] < shortest_distance)
       shortest_distance = distances[i];
