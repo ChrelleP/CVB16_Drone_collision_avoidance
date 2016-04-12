@@ -278,7 +278,7 @@ float feature_detection::calc_distance()
   float bar_width = 75; // mm
 
   float test_width = 10; // pixels, experimentally defined
-  float test_distance = 500; // mm
+  float test_distance = 500; // mm, experimentally defined
 
   float focal_length = (test_width * test_distance) / bar_width;
 
@@ -288,9 +288,8 @@ float feature_detection::calc_distance()
   {
     distances[i] = ( bar_width * focal_length ) / bars[i].re_width();
   }
-
-  // Return the smallest distance using min() on the vector.
-  float shortest_distance = numerical_limits<int>::max;
+  // Return the smallest distance in the vector.
+  float shortest_distance = 10000.1;
   for(int i = 1; i < distances.size(); i++)
   {
     if(distances[i] < shortest_distance)
@@ -299,28 +298,27 @@ float feature_detection::calc_distance()
 
   return shortest_distance;
 }
-void feature_detection::collison_risk()
+int feature_detection::collison_risk(int global_react)
 {
-  if(distance <= 4 && !full_stop)
+  if(calc_distance() <= 4 && (global_react != REACT_STOP))
   {
-    half_speed = true;
-    if(distance <= 2)
+    return REACT_HALFSPEED;
+
+    if(calc_distance() <= 2)
     {
-      full_stop = true;
+      return REACT_STOP;
     }
     else
-    full_stop = false;
+     return REACT_HALFSPEED;
   }
   else
   {
-    if(full_stop)
+    if(global_react == REACT_STOP)
     {
-      half_speed = true;
-
+      return REACT_HALFSPEED;
     }
     else
-    feecback = true;
-    half_speed = false;
+    return REACT_FEEDBACK;
   }
 }
 feature_detection::~feature_detection()
