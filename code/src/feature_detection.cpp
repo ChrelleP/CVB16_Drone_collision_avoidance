@@ -277,17 +277,22 @@ float feature_detection::calc_distance()
   // and W is actual object width.
   float bar_width = 75; // mm
 
-  float test_width = 10; // pixels
+  float test_width = 10; // pixels, experimentally defined
   float test_distance = 500; // mm
 
-  focal_length = (test_width * test_distance) / bar_width;
+  float focal_length = (test_width * test_distance) / bar_width;
 
   // When the focal length is calculated, the distance to new objects can be determined.
   // D = (W x F) / P
-  for(int i 0; i < bars.size(); i++)
+  for(int i = 0; i < bars.size(); i++)
   {
-    distances[i] = ( bar_width * focal_length ) / bars[i][0];
+    distances[i] = ( bar_width * focal_length ) / bars[i].re_width();
   }
+
+  // Return the smallest distance using min() on the vector.
+  auto float shortest_distance = *std::min_element(std::begin(distances), std::end(distances));
+  cout << "shortest_distance: " << shortest_distance << endl;
+  return shortest_distance;
 }
 void feature_detection::collison_risk()
 {

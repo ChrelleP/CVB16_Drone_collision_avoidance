@@ -67,4 +67,5 @@ class feature_detection
     vector<Vec2f> filtered_lines;
 
     vector<object> bars;
+    vector<float> distances;
 };
