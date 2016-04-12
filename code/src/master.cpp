@@ -81,8 +81,8 @@ void *CV_avoid(void *arg)
      pthread_mutex_lock( &reaction_mutex );
      local_reaction = global_reaction;
      pthread_mutex_unlock( &reaction_mutex );
-     
-     local_reaction = FT.collison_risk(local_reaction)
+
+     local_reaction = FT.collison_risk(local_reaction);
 
      pthread_mutex_lock( &reaction_mutex );
      global_reaction = local_reaction;
