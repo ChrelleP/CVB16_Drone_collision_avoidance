@@ -146,6 +146,7 @@ int main ()
     {
       case STATE_FEEDBACK:
           // _________ FEEDBACK STATE _____________
+          printf("Feedback state: throttle = %d", TX.channel_value[0]);
           TX = RX;
 
           // Update state
