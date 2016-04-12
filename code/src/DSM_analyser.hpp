@@ -67,6 +67,7 @@ public: // Methods
 private: // Methods
     long long currentTimeUs();
     void set_channel_value(package &p,int channel, int value);
+    void get_channel_value(package &p);
     void change_packet_values(package &p_in, package &p_out);
     void RX_TX();
 private: // Variables
@@ -196,6 +197,19 @@ void DSM_RX_TX::set_channel_value(package &p,int channel, int value)
    p.byte_L[channel+1] = (value & 0xFF);
 }
 
+void DSM_RX_TX::get_channel_value(package &p)
+/*****************************************************************************
+*   Input    : Package
+*   Output   : Package with channel values matching the high and low bytes.
+*   Function : Transforms the received bytes into channel values
+******************************************************************************/
+{
+   for(int i = 0; i < 7; i++)
+   {
+     p.channel_value[i] = ( 256*p.byte_H[i + 1] ) + p.byte_L[i + 1];
+   }
+}
+
 void DSM_RX_TX::change_packet_values(package &p_in, package &p_out)
 /*****************************************************************************
 *   Input    : 2 packages
@@ -203,7 +217,7 @@ void DSM_RX_TX::change_packet_values(package &p_in, package &p_out)
 *   Function : Changes a packet to another
 ******************************************************************************/
 {
-    p_out = p_in;         // Echo package as standard
+    //p_out = p_in;         // Echo package as standard
     if (packet_max_value) {
         set_channel_value(p_out,0,CHANNEL_MAXVALUE);
         set_channel_value(p_out,1,CHANNEL_MAXVALUE);
@@ -246,7 +260,7 @@ package DSM_RX_TX::DSM_analyse(bool loop, package modified_package)
           RX_TX();
         while(DSM_STATE != DSM_S_IDLE) // Recieve and transmit a packet
           RX_TX();
-        printf("Package received");
+        printf("Package received\n");
         return package_in;
     }
 
@@ -351,6 +365,7 @@ void DSM_RX_TX::RX_TX()
                                 BYTE_TYPE = HIGH;
                                 if (byte_counter >= BYTES_IN_FRAME) // If end of frame note this
                                 {
+                                    get_channel_value(package_in); // Change channel values into the new values
                                     DSM_STATE = DSM_S_IDLE; // Complete packet has been recieved so go into idle
                                     packet_modified = false; // Indicate for IDLE mode that is has to modify the packet if nessecary
                                     safe_mode = true; // Indicate that it has to return to SAFE mode from IDLE mode when a byte is received
