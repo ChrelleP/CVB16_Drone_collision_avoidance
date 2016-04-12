@@ -209,7 +209,7 @@ void feature_detection::identify_objects()
         if( bars[k].update(filtered_lines[i]) )
         {
           updated = true;
-          cout << "Updated" << endl;
+          //cout << "Updated" << endl;
           break;
         }
     }
@@ -250,7 +250,7 @@ void feature_detection::identify_objects()
       }
      }
 
-     cout << "Bars: " << bars.size() << endl;
+     //cout << "Bars: " << bars.size() << endl;
 
      // For all the current bars, check to see if they are still "alive"
      for(int l = 0; l < bars.size(); l++)
@@ -262,7 +262,7 @@ void feature_detection::identify_objects()
        if(temp)
        {
          bars.erase(bars.begin()+l);
-         cout << "erasing" << endl;
+         //cout << "erasing" << endl;
        }
      }
 
