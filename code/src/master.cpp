@@ -146,7 +146,7 @@ int main ()
     {
       case STATE_FEEDBACK:
           // _________ FEEDBACK STATE _____________
-          printf("--Feedback state--");
+          printf("--Feedback state--\n");
           printf("channel 0 = %d \n", TX.channel_value[0]);
           printf("channel 1 = %d \n", TX.channel_value[1]);
           printf("channel 2 = %d \n", TX.channel_value[2]);
@@ -154,6 +154,7 @@ int main ()
           printf("channel 4 = %d \n", TX.channel_value[4]);
           printf("channel 5 = %d \n", TX.channel_value[5]);
           printf("channel 6 = %d \n", TX.channel_value[6]);
+          fflush(stdout);
           TX = RX;
 
           // Update state
