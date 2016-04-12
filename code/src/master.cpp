@@ -83,12 +83,12 @@ void *CV_avoid(void *arg)
      local_reaction = global_reaction;
      pthread_mutex_unlock( &reaction_mutex );
 
-     //local_reaction = FT.collison_risk(local_reaction);
+     local_reaction = FT.collison_risk(local_reaction);
 
      pthread_mutex_lock( &reaction_mutex );
      global_reaction = local_reaction;
      pthread_mutex_unlock( &reaction_mutex );
-     
+
      FT.draw_objects();
 
      FT.show_source();
