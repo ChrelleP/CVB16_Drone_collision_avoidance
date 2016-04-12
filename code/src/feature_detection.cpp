@@ -85,7 +85,7 @@ void feature_detection::draw_objects()
   for( size_t i = 0; i < bars.size(); i++ )
   {
      float rho = bars[i].re_center(), theta = bars[i].re_angle();
-     cout << "Drawing rho: " << rho << " and theta: " << theta << " and width: " << bars[i].re_width() << endl;
+     //cout << "Drawing rho: " << rho << " and theta: " << theta << " and width: " << bars[i].re_width() << endl;
      Point pt1, pt2;
      double a = cos(theta), b = sin(theta);
      double x0 = a*rho, y0 = b*rho;
