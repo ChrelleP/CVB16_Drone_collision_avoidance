@@ -15,6 +15,7 @@
 #include "object.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+#include "DSM_analyser.hpp"
 
 using namespace std;
 using namespace cv;
@@ -25,6 +26,7 @@ using namespace cv;
 #define STATE_STOP           2
 #define STATE_AVOID          3
 
+#define REACT_NOTHING        0
 #define REACT_STOP           1
 #define REACT_FEEDBACK       2
 #define REACT_LEFT           3
@@ -185,9 +187,9 @@ void *CV_avoid(void *arg)
      FT.filter_houghlines();
      FT.identify_objects();
 
-     //FT.draw_objects();
+     FT.draw_objects();
 
-     //FT.show_source();
+     FT.show_source();
      //FT.show_filter();
      //FT.show_edge_map();
 
@@ -203,52 +205,58 @@ void *CV_avoid(void *arg)
 
 int main ()
 {
-  // -------- Open Serial ---------
-  int fd; // File descriptor for AMA0
+  // -------- Startup ---------
+  DSM_RX_TX DSM_UART;
 
-  if ((fd = serialOpen ("/dev/ttyAMA0", 115200)) < 0)
-  {
-    printf ("Unable to open serial device") ;
-  }
-
-  serialFlush(fd);
-
-  // -------- Start threads -------
-  /*pthread_t CV_thread;
+  pthread_t CV_thread;
   int CV_rc;
 
   CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
   if( CV_rc )
     printf("Thread creation failed: %d\n", CV_rc);
-  */
+
   // ------ Variables -------------
-  int state = STATE_FEEDBACK;
-  int local_reaction;
+  int state = STATE_STOP;
+  int local_reaction = REACT_NOTHING;
 
   bool abort = false;
 
-  data_packet RX;
-  data_packet TX;
+  package RX;
+  package TX;
 
-  int temp_byte;
-  int lowbyte;
-  int highbyte;
+  TX.channel_value[0] = CHANNEL0_DEFAULT;
+  TX.channel_value[1] = CHANNEL1_DEFAULT;
+  TX.channel_value[2] = CHANNEL2_DEFAULT;
+  TX.channel_value[3] = CHANNEL3_DEFAULT;
+  TX.channel_value[4] = CHANNEL4_DEFAULT;
+  TX.channel_value[5] = CHANNEL5_DEFAULT;
+  TX.channel_value[6] = CHANNEL6_DEFAULT;
 
   // ------- Main loop -----------
-  while(abort)
+  while(!abort)
   {
     // --------- Recieve -----------
-    if( serialDataAvail(int fd) )
-    {
-      temp_byte = serialGetchar(fd);
+    RX = DSM_UART.DSM_analyse(false, TX);
 
+    printf("------- Transmitted -------\n");
+    printf("channel 0 = %d \n", TX.channel_value[0]);
+    printf("channel 1 = %d \n", TX.channel_value[1]);
+    printf("channel 2 = %d \n", TX.channel_value[2]);
+    printf("channel 3 = %d \n", TX.channel_value[3]);
+    printf("channel 4 = %d \n", TX.channel_value[4]);
+    printf("channel 5 = %d \n", TX.channel_value[5]);
+    printf("channel 6 = %d \n", TX.channel_value[6]);
 
-      if()
-      {
+    printf("------- Received ----------\n");
+    printf("channel 0 = %d \n", RX.channel_value[0]);
+    printf("channel 1 = %d \n", RX.channel_value[1]);
+    printf("channel 2 = %d \n", RX.channel_value[2]);
+    printf("channel 3 = %d \n", RX.channel_value[3]);
+    printf("channel 4 = %d \n", RX.channel_value[4]);
+    printf("channel 5 = %d \n", RX.channel_value[5]);
+    printf("channel 6 = %d \n", RX.channel_value[6]);
 
-      }
-
-    }
+    system("clear");
 
     // --------- State machine ----------
     // Retrieve reaction
@@ -261,29 +269,24 @@ int main ()
     {
       case STATE_FEEDBACK:
           // _________ FEEDBACK STATE _____________
-          // RX -> TX
-
-          TX.throttle = RX.throttle;
-          TX.pitch = RX.pitch;
-          //...
+          TX = RX;
 
           // Update state
-
           switch(local_reaction)
           {
             case REACT_STOP: state = STATE_STOP;
                              break;
             case REACT_LEFT: state = STATE_STOP;
                              break;
-            default: cout << "Error in state change" << endl;
-                          break;
+            default:         break; // No state change
           }
           break;
       case STATE_STOP:
           // _________ STOP STATE _________________
           // Keep constant throttle, everything else 0.
+          TX = RX;
 
-          TX.throttle = RX.throttle;
+          TX.channel_value[6] = 0;
 
           // Update state
           switch(local_reaction)
@@ -292,20 +295,16 @@ int main ()
                              break;
             case REACT_LEFT: state = STATE_STOP;
                              break;
-            default: cout << "Error in state change" << endl;
-                          break;
+            default:         break;
           }
           break;
        default: cout << "Error in state" << endl;
+                abort = true;
                      break;
     }
-
-    // -------- TRANSMIT ---------------
-    // TX.transmit();
-
-
   }
 
+  DSM_UART.DSM_analyse(true, RX);
   //pthread_join( CV_thread, NULL);
 
   return 0;
