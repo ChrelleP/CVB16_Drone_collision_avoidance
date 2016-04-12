@@ -268,7 +268,59 @@ void feature_detection::identify_objects()
 
   }
 }
+float feature_detection::calc_distance()
+{
+  // In order to calculate the distance to the identified objects, a "real" bar width is determined.
+  // For simplicity, this width is estimated to be 75mm.
+  // To calculate the distance to the bars, the focal length needs to be determined.
+  // F = (P x D) / W, where P is the percieved width in pixels, D is the distance to the object,
+  // and W is actual object width.
+  float bar_width = 75; // mm
 
+  float test_width = 10; // pixels, experimentally defined
+  float test_distance = 500; // mm, experimentally defined
+
+  float focal_length = (test_width * test_distance) / bar_width;
+
+  // When the focal length is calculated, the distance to new objects can be determined.
+  // D = (W x F) / P
+  for(int i = 0; i < bars.size(); i++)
+  {
+    distances[i] = ( bar_width * focal_length ) / bars[i].re_width();
+  }
+  // Return the smallest distance in the vector.
+  float shortest_distance = 10000.1;
+  for(int i = 1; i < distances.size(); i++)
+  {
+    if(distances[i] < shortest_distance)
+      shortest_distance = distances[i];
+  }
+
+  return shortest_distance;
+}
+int feature_detection::collison_risk(int global_react)
+{
+  if(calc_distance() <= 4 && (global_react != REACT_STOP))
+  {
+    return REACT_HALFSPEED;
+
+    if(calc_distance() <= 2)
+    {
+      return REACT_STOP;
+    }
+    else
+     return REACT_HALFSPEED;
+  }
+  else
+  {
+    if(global_react == REACT_STOP)
+    {
+      return REACT_HALFSPEED;
+    }
+    else
+    return REACT_FEEDBACK;
+  }
+}
 feature_detection::~feature_detection()
 {
 

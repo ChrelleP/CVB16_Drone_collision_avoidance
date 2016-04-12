@@ -30,6 +30,7 @@ using namespace cv;
 #define REACT_STOP           1
 #define REACT_FEEDBACK       2
 #define REACT_LEFT           3
+#define REACT_HALFSPEED      4
 
 // ------------------------------ STRUCTS --------------------------------------
 struct data_packet{
@@ -46,113 +47,10 @@ volatile int global_reaction;
 pthread_mutex_t reaction_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // --------------------------- FUNCTIONS ---------------------------------------
-<<<<<<< HEAD
-int main ()
-{
-  // -------- Open Serial ---------
-  int fd; // File descriptor for AMA0
-
-  if ((fd = serialOpen ("/dev/ttyAMA0", 115200)) < 0)
-  {
-    printf ("Unable to open serial device") ;
-  }
-
-  serialFlush(fd);
-
-  // -------- Start threads -------
-  pthread_t CV_thread;
-  int CV_rc;
-
-  CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
-  if( CV_rc )
-    printf("Thread creation failed: %d\n", CV_rc);
-
-  // ------ Variables -------------
-  int state = STATE_FEEDBACK;
-  int local_reaction;
-
-  bool abort = false;
-
-  data_packet RX;
-  data_packet TX;
-
-  // ------- Main loop -----------
-  while(abort)
-  {
-    // --------- Recieve -----------
-    // RX.receive()
-
-    // --------- State machine ----------
-    // Retrieve reaction
-    pthread_mutex_lock( &reaction_mutex );
-    local_reaction = global_reaction;
-    pthread_mutex_unlock( &reaction_mutex );
-
-    // Switch on the state
-    switch(state)
-    {
-      case STATE_FEEDBACK:
-          // _________ FEEDBACK STATE _____________
-          // RX -> TX
-
-          TX.throttle = RX.throttle;
-          TX.pitch = RX.pitch;
-          //...
-
-          // Update state
-
-          switch(local_reaction)
-          {
-            case REACT_STOP: state = STATE_STOP;
-                             break;
-            case REACT_LEFT: state = STATE_STOP;
-                             break;
-            case default: cout << "Error in state change" << endl;
-                          break;
-          }
-          break;
-      case STATE_STOP:
-          // _________ STOP STATE _________________
-          // Keep constant throttle, everything else 0.
-
-          TX.throttle = RX.throttle;
-
-          // Update state
-          switch(local_reaction)
-          {
-            case REACT_STOP: state = STATE_STOP;
-                             break;
-            case REACT_LEFT: state = STATE_STOP;
-                             break;
-            case default: cout << "Error in state change" << endl;
-                          break;
-          }
-          break;
-       case default: cout << "Error in state" << endl;
-                     break;
-    }
-
-    // -------- TRANSMIT ---------------
-    // TX.transmit();
-
-
-  }
-
-  pthread_join( CV_thread, NULL);
-
-  return 0;
-}
-
-void *CV_avoid(void *arg)
-{
-   //------------- Create objects and variables -------------
-   feature_detection FT(0);   // Feature Detection object - used for CV methods
-=======
 void *CV_avoid(void *arg)
 {
    //------------- Create objects and variables -------------
    feature_detection FT;   // Feature Detection object - used for CV methods
->>>>>>> 2c37b3f3dc0a209104f101d2c5465c29863a894b
    VideoCapture cap(0);       // Video Capture object - used to get frames from video
 
    //------------- Variables --------------------------------
@@ -206,9 +104,19 @@ void *CV_avoid(void *arg)
 int main ()
 {
   // -------- Startup ---------
+<<<<<<< HEAD
   DSM_RX_TX DSM_UART;
 
+<<<<<<< HEAD
   pthread_t CV_thread;
+=======
+  /*pthread_t CV_thread;
+=======
+  DSM_RX_TX();
+
+  pthread_t CV_thread;
+>>>>>>> a9658f18d0a302f6fe884ab10e6e46bfbf4ec42e
+>>>>>>> collisionRisk
   int CV_rc;
 
   CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
@@ -236,7 +144,11 @@ int main ()
   while(!abort)
   {
     // --------- Recieve -----------
+<<<<<<< HEAD
     RX = DSM_UART.DSM_analyse(false, TX);
+=======
+    DSM_analyse(true);
+>>>>>>> a9658f18d0a302f6fe884ab10e6e46bfbf4ec42e
 
     printf("------- Transmitted -------\n");
     printf("channel 0 = %d \n", TX.channel_value[0]);

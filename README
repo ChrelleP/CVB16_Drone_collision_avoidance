@@ -9,3 +9,11 @@ greenhouse environment.
 
 Compiling on Raspberry Pi may need the following command to set up the virtual environment: 
 ~/CVB16_Drone_collision_avoidance$ workon cv
+
+
+This branch is for the colision avoidance system in terms of computer vision. This is
+implemented as collision risk methods in the feature_detection class. 
+
+Three modes are considered: half_speed, full_stop and feedback. 
+
+Look in hpp and cpp files for more information.

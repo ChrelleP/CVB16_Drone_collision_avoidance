@@ -20,6 +20,12 @@
 #include "object.hpp"
 #include <math.h>
 
+// DEFINES
+#define REACT_STOP           1
+#define REACT_FEEDBACK       2
+#define REACT_LEFT           3
+#define REACT_HALFSPEED      4
+
 using namespace std;
 using namespace cv;
 
@@ -33,7 +39,7 @@ class feature_detection
 
     void filter(int &lb, int &ub, int &as);
     void edges(int &lb, int &ub, int &as);
-    void lines(int &rho, float &theta, int &threshold);
+    void lines(float &rho, float &theta, int &threshold);
 
     void show_source();
     void show_filter();
@@ -49,6 +55,10 @@ class feature_detection
 
     void identify_objects();
 
+    float calc_distance();
+
+    int collison_risk(int global_react);
+
   	~feature_detection();
 
   private:
@@ -63,4 +73,5 @@ class feature_detection
     vector<Vec2f> filtered_lines;
 
     vector<object> bars;
+    vector<float> distances;
 };
