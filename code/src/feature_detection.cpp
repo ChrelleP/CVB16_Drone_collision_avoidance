@@ -290,8 +290,13 @@ float feature_detection::calc_distance()
   }
 
   // Return the smallest distance using min() on the vector.
-  auto float shortest_distance = *std::min_element(std::begin(distances), std::end(distances));
-  cout << "shortest_distance: " << shortest_distance << endl;
+  float shortest_distance = numerical_limits<int>::max;
+  for(int i = 1; i < distances.size(); i++)
+  {
+    if(distances[i] < shortest_distance)
+      shortest_distance = distances[i];
+  }
+
   return shortest_distance;
 }
 void feature_detection::collison_risk()
