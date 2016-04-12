@@ -113,7 +113,7 @@ int main ()
     printf("Thread creation failed: %d\n", CV_rc);
   */
   // ------ Variables -------------
-  int state = STATE_FEEDBACK;
+  int state = STATE_STOP;
   int local_reaction = REACT_NOTHING;
 
   bool abort = false;
@@ -181,6 +181,9 @@ int main ()
       case STATE_STOP:
           // _________ STOP STATE _________________
           // Keep constant throttle, everything else 0.
+          TX = RX;
+
+          TX.channel_value[6] = 0;
 
           // Update state
           switch(local_reaction)
