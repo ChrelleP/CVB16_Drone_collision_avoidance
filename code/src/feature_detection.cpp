@@ -271,11 +271,6 @@ void feature_detection::identify_objects()
 
 int feature_detection::collison_risk2(int temp)
 {
-  return 1;
-}
-
-int feature_detection::collison_risk(int global_react)
-{
   // ------------- Distance Calculation ------------
   // In order to calculate the distance to the identified objects, a "real" bar width is determined.
   // For simplicity, this width is estimated to be 75mm.
@@ -290,6 +285,16 @@ int feature_detection::collison_risk(int global_react)
 
   float test_width = 100; // pixels, experimentally defined
   float test_distance = 500; // mm, experimentally defined
+
+
+
+
+  return 1;
+}
+
+int feature_detection::collison_risk(int global_react)
+{
+
 
   float focal_length = (test_width * test_distance) / bar_width;
   // When the focal length is calculated, the distance to new objects can be determined.
