@@ -327,7 +327,7 @@ void DSM_RX_TX::RX_TX()
                                 package_in.byte_L[0] = byte_in;
                                 BYTE_TYPE = HIGH;
                                 sync_value = (256*old_byte_in)+byte_in;
-                                //printf("******* Preamble ********* Sync_val: %i\n",sync_value);
+                                printf("******* Preamble ********* Sync_val: %i\n",sync_value);
 
                                 if(sync_value == sync_value_expected
                                     || (((sync_value_expected_next - SYNC_TOLERANCE) < sync_value)
@@ -338,7 +338,7 @@ void DSM_RX_TX::RX_TX()
                                 }
                                 else
                                 {
-                                    //printf("Switching to UNSAFE mode due to bad sync\n");
+                                    printf("Switching to UNSAFE mode due to bad sync\n");
                                     safe_zone_syncs = 0;
                                     last_sync_dist = 0;
                                     safe_mode = false;
@@ -404,12 +404,12 @@ void DSM_RX_TX::RX_TX()
                 {
                     sync_value_expected = sync_value;
                     sync_value_expected_next = sync_value + 45;
-                    //printf("Last_sync_dist: %i\n",last_sync_dist);
+                    printf("Last_sync_dist: %i\n",last_sync_dist);
                     if((safe_zone_syncs > 0 && last_sync_dist == 15) || safe_zone_syncs == 0)
                     {
                         safe_zone_syncs++;
                         last_sync_dist = 0;
-                        //printf("Safe_zone_zyncs: %i Sync_value: %i Sync_value_expected: %i Sync_value_expected_next: %i \n",safe_zone_syncs,sync_value,sync_value_expected,sync_value_expected_next);
+                        printf("Safe_zone_zyncs: %i Sync_value: %i Sync_value_expected: %i Sync_value_expected_next: %i \n",safe_zone_syncs,sync_value,sync_value_expected,sync_value_expected_next);
                     }
                     else if(safe_zone_syncs>0)
                         safe_zone_syncs--;
@@ -424,7 +424,7 @@ void DSM_RX_TX::RX_TX()
                     PREAMBLE = true;
                     BYTE_TYPE = HIGH;
                     DSM_STATE = DSM_S_SAFE;
-                    //printf("Exiting unsafe zone\n");
+                    printf("Exiting unsafe zone\n");
                     break;
                 }
 
