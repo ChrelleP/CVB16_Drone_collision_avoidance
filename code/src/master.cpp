@@ -25,6 +25,7 @@ using namespace cv;
 #define STATE_FEEDBACK       1
 #define STATE_STOP           2
 #define STATE_AVOID          3
+#define STATE_HALFSPEED      4
 
 #define REACT_NOTHING        0
 #define REACT_STOP           1
@@ -207,8 +208,6 @@ int main ()
           {
             case REACT_FEEDBACK: state = STATE_FEEDBACK;
                                  break;
-            case REACT_LEFT: state = STATE_STOP;
-                             break;
             default:         break;
           }
           break;
