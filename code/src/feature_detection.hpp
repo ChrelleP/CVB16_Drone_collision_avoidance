@@ -55,13 +55,13 @@ class feature_detection
 
     void identify_objects();
 
-    float calc_distance();
-
     int collison_risk(int global_react);
 
   	~feature_detection();
 
   private:
+    float calc_distance();
+
     const char* filename;
 
     Mat filtered;

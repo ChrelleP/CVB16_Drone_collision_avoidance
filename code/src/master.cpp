@@ -54,6 +54,7 @@ void *CV_avoid(void *arg)
 
    //------------- Variables --------------------------------
    int local_reaction = REACT_NOTHING;
+   int temp_reaction = REACT_NOTHING;
 
    int LB_MASK = 65;                 // Lower bound for mask
    int UB_MASK = 98;                 // Upper bound for mask
@@ -85,22 +86,16 @@ void *CV_avoid(void *arg)
      FT.filter_houghlines();
      FT.identify_objects();
 
-     int temp_reaction = REACT_NOTHING;
-
-     /*
      pthread_mutex_lock( &reaction_mutex );
      temp_reaction = global_reaction;
      pthread_mutex_unlock( &reaction_mutex );
-     */
 
      local_reaction = FT.collison_risk(temp_reaction);
      printf("Collision risk ended \n");
 
-     /*
      pthread_mutex_lock( &reaction_mutex );
      global_reaction = local_reaction;
      pthread_mutex_unlock( &reaction_mutex );
-     */
 
      FT.draw_objects();
 

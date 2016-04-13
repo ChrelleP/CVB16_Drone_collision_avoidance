@@ -268,29 +268,33 @@ void feature_detection::identify_objects()
 
   }
 }
+
 float feature_detection::calc_distance()
 {
+
+  return shortest_distance;
+}
+
+int feature_detection::collison_risk(int global_react)
+{
+  // ------------- Distance Calculation ------------
   // In order to calculate the distance to the identified objects, a "real" bar width is determined.
   // For simplicity, this width is estimated to be 75mm.
   // To calculate the distance to the bars, the focal length needs to be determined.
   // F = (P x D) / W, where P is the percieved width in pixels, D is the distance to the object,
   // and W is actual object width.
   printf("Calculating distance");
+
+  distances.clear();
+
   float bar_width = 75; // mm
 
   float test_width = 100; // pixels, experimentally defined
   float test_distance = 500; // mm, experimentally defined
 
   float focal_length = (test_width * test_distance) / bar_width;
-
   // When the focal length is calculated, the distance to new objects can be determined.
   // D = (W x F) / P
-  if(bars.size() == 0)
-  {
-    printf("Returning default distance");
-    return 1000000;
-  }
-
   for(int i = 0; i < bars.size(); i++)
   {
     //distances[i] = ( bar_width * focal_length ) / bars[i].re_width();
@@ -304,29 +308,22 @@ float feature_detection::calc_distance()
     if(distances[i] < shortest_distance)
       shortest_distance = distances[i];
   }
-  distances.clear();
 
-  printf("Returning distance");
-  return shortest_distance;
-}
-int feature_detection::collison_risk(int global_react)
-{
+  // ---------------- Collision risk ----------------------
+
   printf("Collision risk started\n");
-  float distance_temp = calc_distance();
-  printf("Distance calculated\n");
 
-
-  if(distance_temp <= 4 && (global_react != REACT_STOP))
+  if(shortest_distance <= 4000 && (global_react != REACT_STOP))
   {
     printf("react halfspeed 1\n");
     return REACT_HALFSPEED;
   }
-  else if(distance_temp <= 2)
+  else if(shortest_distance <= 2000)
   {
     printf("react stop\n");
     return REACT_STOP;
   }
-  else if(distance_temp <= 4)
+  else if(distance_temp <= 4000)
   {
     printf("react halfspeed 2\n");
     return REACT_HALFSPEED;
@@ -337,6 +334,7 @@ int feature_detection::collison_risk(int global_react)
     return REACT_FEEDBACK;
   }
 }
+
 feature_detection::~feature_detection()
 {
 
