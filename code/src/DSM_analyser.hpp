@@ -260,7 +260,7 @@ package DSM_RX_TX::DSM_analyse(bool loop, package modified_package)
           RX_TX();
         while(DSM_STATE != DSM_S_IDLE) // Recieve and transmit a packet
           RX_TX();
-        printf("Package received\n");
+        //printf("Package received\n");
         return package_in;
     }
 
@@ -404,12 +404,12 @@ void DSM_RX_TX::RX_TX()
                 {
                     sync_value_expected = sync_value;
                     sync_value_expected_next = sync_value + 45;
-                    printf("Last_sync_dist: %i\n",last_sync_dist);
+                    //printf("Last_sync_dist: %i\n",last_sync_dist);
                     if((safe_zone_syncs > 0 && last_sync_dist == 15) || safe_zone_syncs == 0)
                     {
                         safe_zone_syncs++;
                         last_sync_dist = 0;
-                        printf("Safe_zone_zyncs: %i Sync_value: %i Sync_value_expected: %i Sync_value_expected_next: %i \n",safe_zone_syncs,sync_value,sync_value_expected,sync_value_expected_next);
+                        //printf("Safe_zone_zyncs: %i Sync_value: %i Sync_value_expected: %i Sync_value_expected_next: %i \n",safe_zone_syncs,sync_value,sync_value_expected,sync_value_expected_next);
                     }
                     else if(safe_zone_syncs>0)
                         safe_zone_syncs--;
@@ -424,7 +424,7 @@ void DSM_RX_TX::RX_TX()
                     PREAMBLE = true;
                     BYTE_TYPE = HIGH;
                     DSM_STATE = DSM_S_SAFE;
-                    printf("Exiting unsafe zone\n");
+                    //printf("Exiting unsafe zone\n");
                     break;
                 }
 
