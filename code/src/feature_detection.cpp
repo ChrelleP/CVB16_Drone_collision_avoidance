@@ -323,7 +323,7 @@ int feature_detection::collison_risk(int global_react)
     printf("react stop\n");
     return REACT_STOP;
   }
-  else if(distance_temp <= 4000)
+  else if(shortest_distance <= 4000)
   {
     printf("react halfspeed 2\n");
     return REACT_HALFSPEED;
