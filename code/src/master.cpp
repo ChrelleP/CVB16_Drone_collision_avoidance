@@ -89,6 +89,7 @@ void *CV_avoid(void *arg)
      pthread_mutex_unlock( &reaction_mutex );
 
      local_reaction = FT.collison_risk(local_reaction);
+     printf("Collision risk ended \n");
 
      pthread_mutex_lock( &reaction_mutex );
      global_reaction = local_reaction;
@@ -209,6 +210,7 @@ int main ()
             default:         break;
           }
           break;
+       case STATE_
        default: cout << "Error in state" << endl;
                 abort = true;
                      break;
