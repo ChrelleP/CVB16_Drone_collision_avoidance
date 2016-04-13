@@ -125,7 +125,7 @@ int main ()
     printf("Thread creation failed: %d\n", CV_rc);
 
   // ------ Variables -------------
-  int state = STATE_STOP;
+  int state = STATE_FEEDBACK;
   int local_reaction = REACT_NOTHING;
   int stop_value = 0;
   int packet_counter = 0;
@@ -146,12 +146,12 @@ int main ()
   // ------- Main loop -----------
   while(!abort)
   {
-    //system("clear"); // Clear terminal
+    system("clear"); // Clear terminal
 
     // --------- Recieve -----------
     RX = DSM_UART.DSM_analyse(false, TX);
 
-    /*
+
     printf("------- Transmitted -------\n");
     printf("channel 0 = %d \n", TX.channel_value[0]);
     printf("channel 1 = %d \n", TX.channel_value[1]);
@@ -169,16 +169,16 @@ int main ()
     printf("channel 4 = %d \n", RX.channel_value[4]);
     printf("channel 5 = %d \n", RX.channel_value[5]);
     printf("channel 6 = %d \n", RX.channel_value[6]);
-    */
+
     // --------- State machine ----------
     // Retrieve reaction
     pthread_mutex_lock( &reaction_mutex );
     local_reaction = global_reaction;
     pthread_mutex_unlock( &reaction_mutex );
-    /*
+
     printf("\n ------ States And Reacts -------\n");
     printf(" State: %d    React: %d \n", state, local_reaction);
-    */
+
     // Switch on the state
     switch(state)
     {
@@ -192,8 +192,8 @@ int main ()
             case REACT_STOP: state = STATE_STOP;
                              stop_value = TX.channel_value[6];
                              break;
-            case REACT_LEFT: state = STATE_STOP;
-                             break;
+            case REACT_HALFSPEED: state = STATE_HALFSPEED;
+                                  break;
             default:         break; // No state change
           }
           break;
@@ -209,12 +209,34 @@ int main ()
           {
             case REACT_FEEDBACK: state = STATE_FEEDBACK;
                                  break;
+            case REACT_HALFSPEED: state = STATE_HALFSPEED;
+                                  break;
             default:         break;
           }
           break;
        case STATE_HALFSPEED:
           // _________ HALFSPEED STATE ______________
           // Use half the speed
+          TX = RX;
+
+          TX.channel_value[0] = TX.channel_value[0] / 2;
+          TX.channel_value[1] = TX.channel_value[1] / 2;
+          TX.channel_value[2] = TX.channel_value[2] / 2;
+          TX.channel_value[3] = TX.channel_value[3] / 2;
+          TX.channel_value[4] = TX.channel_value[4] / 2;
+          TX.channel_value[5] = TX.channel_value[5] / 2;
+          TX.channel_value[6] = TX.channel_value[6] / 2;
+
+          // Update state
+          switch(local_reaction)
+          {
+            case REACT_FEEDBACK: state = STATE_FEEDBACK;
+                                 break;
+            case REACT_STOP:     state = STATE_HALFSPEED;
+                                 stop_value = TX.channel_value[6];
+                                 break;
+            default:         break;
+          }
           break;
        default: cout << "Error in state" << endl;
                 abort = true;
