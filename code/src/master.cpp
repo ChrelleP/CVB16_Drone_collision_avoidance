@@ -85,18 +85,22 @@ void *CV_avoid(void *arg)
      FT.filter_houghlines();
      FT.identify_objects();
 
-     int temp_reaction;
+     int temp_reaction = REACT_NOTHING;
 
+     /*
      pthread_mutex_lock( &reaction_mutex );
      temp_reaction = global_reaction;
      pthread_mutex_unlock( &reaction_mutex );
+     */
 
-     //local_reaction = FT.collison_risk(temp_reaction);
+     local_reaction = FT.collison_risk(temp_reaction);
      printf("Collision risk ended \n");
 
+     /*
      pthread_mutex_lock( &reaction_mutex );
      global_reaction = local_reaction;
      pthread_mutex_unlock( &reaction_mutex );
+     */
 
      FT.draw_objects();
 
