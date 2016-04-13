@@ -286,7 +286,15 @@ int feature_detection::collison_risk2(int temp)
   float test_width = 100; // pixels, experimentally defined
   float test_distance = 500; // mm, experimentally defined
 
-
+  float focal_length = (test_width * test_distance) / bar_width;
+  // When the focal length is calculated, the distance to new objects can be determined.
+  // D = (W x F) / P
+  for(int i = 0; i < bars.size(); i++)
+  {
+    //distances[i] = ( bar_width * focal_length ) / bars[i].re_width();
+    distances[i] = 100;
+    //printf("bars found\n");
+  }
 
 
   return 1;
