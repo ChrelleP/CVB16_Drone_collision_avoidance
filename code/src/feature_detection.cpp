@@ -269,6 +269,11 @@ void feature_detection::identify_objects()
   }
 }
 
+int feature_detection::collison_risk2(int temp)
+{
+  return 1;
+}
+
 int feature_detection::collison_risk(int global_react)
 {
   // ------------- Distance Calculation ------------
