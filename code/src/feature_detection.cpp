@@ -317,7 +317,7 @@ int feature_detection::collision_risk(int global_react)
   {
     return REACT_HALFSPEED;
   }
-  else if(temp_dist <= 600)
+  else if(temp_dist <= 600 && (global_react != REACT_HALFSPEED))
   {
     return REACT_STOP;
   }
