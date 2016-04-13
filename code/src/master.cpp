@@ -210,7 +210,7 @@ int main ()
             default:         break;
           }
           break;
-       case STATE_
+       
        default: cout << "Error in state" << endl;
                 abort = true;
                      break;
