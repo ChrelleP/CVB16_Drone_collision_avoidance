@@ -50,7 +50,7 @@ void *CV_avoid(void *arg)
 {
    //------------- Create objects and variables -------------
    feature_detection FT;   // Feature Detection object - used for CV methods
-   VideoCapture cap(0);       // Video Capture object - used to get frames from video
+   VideoCapture cap("FVS_3.avi");       // Video Capture object - used to get frames from video
 
    //------------- Variables --------------------------------
    int local_reaction = REACT_NOTHING;
@@ -104,7 +104,7 @@ void *CV_avoid(void *arg)
      //FT.show_filter();
      //FT.show_edge_map();
 
-     if(waitKey(10) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
+     if(waitKey(33) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
      {
        cout << "esc key is pressed by user" << endl;
        break;
@@ -148,9 +148,11 @@ int main ()
   // ------- Main loop -----------
   while(!abort)
   {
+    system("clear"); // Clear terminal
+
     // --------- Recieve -----------
     RX = DSM_UART.DSM_analyse(false, TX);
-    /*
+
     printf("------- Transmitted -------\n");
     printf("channel 0 = %d \n", TX.channel_value[0]);
     printf("channel 1 = %d \n", TX.channel_value[1]);
@@ -169,14 +171,14 @@ int main ()
     printf("channel 5 = %d \n", RX.channel_value[5]);
     printf("channel 6 = %d \n", RX.channel_value[6]);
 
-    system("clear");
-    */
-
     // --------- State machine ----------
     // Retrieve reaction
     pthread_mutex_lock( &reaction_mutex );
     local_reaction = global_reaction;
     pthread_mutex_unlock( &reaction_mutex );
+
+    printf("\n ------ States And Reacts -------\n");
+    printf(" State: %d    React: %d \n", state, local_reaction);
 
     // Switch on the state
     switch(state)

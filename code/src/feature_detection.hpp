@@ -62,6 +62,7 @@ class feature_detection
   private:
     const char* filename;
 
+    float calc_distance();
     Mat filtered;
     Mat edge_map;
 

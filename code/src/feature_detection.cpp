@@ -268,9 +268,7 @@ void feature_detection::identify_objects()
 
   }
 }
-
-
-int feature_detection::collision_risk(int global_react)
+float feature_detection::calc_distance()
 {
   // ------------- Distance Calculation ------------
   // In order to calculate the distance to the identified objects, a "real" bar width is determined.
@@ -278,8 +276,6 @@ int feature_detection::collision_risk(int global_react)
   // To calculate the distance to the bars, the focal length needs to be determined.
   // F = (P x D) / W, where P is the percieved width in pixels, D is the distance to the object,
   // and W is actual object width.
-  printf("Distances size: %d", distances.size());
-
   distances.clear();
 
   float bar_width = 75; // mm
@@ -291,6 +287,11 @@ int feature_detection::collision_risk(int global_react)
   float focal_length = (test_width * test_distance) / bar_width;
   // When the focal length is calculated, the distance to new objects can be determined.
   // D = (W x F) / P
+  if(bars.size())
+  {
+    return 100000;
+  }
+
   for(int i = 0; i < bars.size(); i++)
   {
     distances.push_back( ( bar_width * focal_length ) / bars[i].re_width() );
@@ -303,27 +304,27 @@ int feature_detection::collision_risk(int global_react)
     if(distances[i] < shortest_distance)
       shortest_distance = distances[i];
   }
+  return shortest_distance;
+}
 
-  // ---------------- Collision risk ----------------------
+int feature_detection::collision_risk(int global_react)
+{
+  float temp_dist = calc_distance();
 
-  if(shortest_distance <= 4000 && (global_react != REACT_STOP))
+  if(temp_dist <= 4000 && (global_react != REACT_STOP))
   {
-    //printf("react halfspeed 1\n");
     return REACT_HALFSPEED;
   }
-  else if(shortest_distance <= 2000)
+  else if(temp_dist <= 2000)
   {
-    //printf("react stop\n");
     return REACT_STOP;
   }
-  else if(shortest_distance <= 4000)
+  else if(temp_dist <= 4000)
   {
-    //printf("react halfspeed 2\n");
     return REACT_HALFSPEED;
   }
   else
   {
-    //printf("react feecback\n");
     return REACT_FEEDBACK;
   }
 }
