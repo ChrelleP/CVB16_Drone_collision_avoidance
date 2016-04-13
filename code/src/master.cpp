@@ -32,6 +32,11 @@ using namespace cv;
 #define REACT_LEFT           3
 #define REACT_HALFSPEED      4
 
+#define THROTTLE             6
+#define YAW                  2
+#define PITCH                3
+#define PAN                  4
+
 // --------------------------- GLOBAL VARIABLES --------------------------------
 
 volatile int global_reaction;
@@ -120,6 +125,8 @@ int main ()
   // ------ Variables -------------
   int state = STATE_STOP;
   int local_reaction = REACT_NOTHING;
+  int stop_value = 0;
+  int packet_counter = 0;
 
   bool abort = false;
 
@@ -177,6 +184,7 @@ int main ()
           switch(local_reaction)
           {
             case REACT_STOP: state = STATE_STOP;
+                             stop_value = TX.channel_value[6];
                              break;
             case REACT_LEFT: state = STATE_STOP;
                              break;
@@ -188,7 +196,7 @@ int main ()
           // Keep constant throttle, everything else 0.
           TX = RX;
 
-          TX.channel_value[6] = 0;
+          TX.channel_value[6] = stop_value;
 
           // Update state
           switch(local_reaction)
