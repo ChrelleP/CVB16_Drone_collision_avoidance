@@ -277,7 +277,7 @@ int feature_detection::collison_risk(int global_react)
   // To calculate the distance to the bars, the focal length needs to be determined.
   // F = (P x D) / W, where P is the percieved width in pixels, D is the distance to the object,
   // and W is actual object width.
-  //printf("In method collision");
+  printf("Distances size: %d", distances.size());
 
   distances.clear();
 
