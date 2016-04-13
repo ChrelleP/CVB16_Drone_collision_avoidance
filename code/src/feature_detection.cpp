@@ -305,26 +305,20 @@ float feature_detection::calc_distance()
 }
 int feature_detection::collison_risk(int global_react)
 {
-  if(calc_distance() <= 4 && (global_react != REACT_STOP))
-  {
+  float distance_temp = calc_distance();
+
+  if(distance_temp <= 4 && (global_react != REACT_STOP))
     return REACT_HALFSPEED;
 
-    if(calc_distance() <= 2)
-    {
-      return REACT_STOP;
-    }
-    else
-     return REACT_HALFSPEED;
-  }
+  else if(distance_temp <= 2)
+    return REACT_STOP;
+
+  else if(distance_temp <= 4)
+    return REACT_HALFSPEED;
+
   else
-  {
-    if(global_react == REACT_STOP)
-    {
-      return REACT_HALFSPEED;
-    }
-    else
     return REACT_FEEDBACK;
-  }
+    
 }
 feature_detection::~feature_detection()
 {
