@@ -313,15 +313,15 @@ int feature_detection::collision_risk(int global_react)
 
   //printf("temp distance: %f\n", temp_dist);
 
-  if(temp_dist <= 400 && (global_react != REACT_STOP))
+  if(temp_dist <= 500 && (global_react != REACT_STOP))
   {
     return REACT_HALFSPEED;
   }
-  else if(temp_dist <= 200)
+  else if(temp_dist <= 400)
   {
     return REACT_STOP;
   }
-  else if(temp_dist <= 400)
+  else if(temp_dist <= 500)
   {
     return REACT_HALFSPEED;
   }
