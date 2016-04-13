@@ -90,6 +90,7 @@ void *CV_avoid(void *arg)
      temp_reaction = global_reaction;
      pthread_mutex_unlock( &reaction_mutex );
 
+     printf("Collision risk started \n");
      local_reaction = FT.collison_risk(temp_reaction);
      printf("Collision risk ended \n");
 
@@ -211,6 +212,8 @@ int main ()
           }
           break;
        case STATE_HALFSPEED:
+          // _________ HALFSPEED STATE ______________
+          // Use half the speed
           break;
        default: cout << "Error in state" << endl;
                 abort = true;
