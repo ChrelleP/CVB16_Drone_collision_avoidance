@@ -146,11 +146,12 @@ int main ()
   // ------- Main loop -----------
   while(!abort)
   {
-    system("clear"); // Clear terminal
+    //system("clear"); // Clear terminal
 
     // --------- Recieve -----------
     RX = DSM_UART.DSM_analyse(false, TX);
 
+    /*
     printf("------- Transmitted -------\n");
     printf("channel 0 = %d \n", TX.channel_value[0]);
     printf("channel 1 = %d \n", TX.channel_value[1]);
@@ -168,16 +169,16 @@ int main ()
     printf("channel 4 = %d \n", RX.channel_value[4]);
     printf("channel 5 = %d \n", RX.channel_value[5]);
     printf("channel 6 = %d \n", RX.channel_value[6]);
-
+    */
     // --------- State machine ----------
     // Retrieve reaction
     pthread_mutex_lock( &reaction_mutex );
     local_reaction = global_reaction;
     pthread_mutex_unlock( &reaction_mutex );
-
+    /*
     printf("\n ------ States And Reacts -------\n");
     printf(" State: %d    React: %d \n", state, local_reaction);
-
+    */
     // Switch on the state
     switch(state)
     {
