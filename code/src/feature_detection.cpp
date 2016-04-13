@@ -292,7 +292,6 @@ int feature_detection::collison_risk2(int temp)
   for(int i = 0; i < bars.size(); i++)
   {
     //distances[i] = ( bar_width * focal_length ) / bars[i].re_width();
-    distances[i] = 100;
     //printf("bars found\n");
   }
 
