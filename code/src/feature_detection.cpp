@@ -269,37 +269,8 @@ void feature_detection::identify_objects()
   }
 }
 
-int feature_detection::collison_risk2(int temp)
-{
-  // ------------- Distance Calculation ------------
-  // In order to calculate the distance to the identified objects, a "real" bar width is determined.
-  // For simplicity, this width is estimated to be 75mm.
-  // To calculate the distance to the bars, the focal length needs to be determined.
-  // F = (P x D) / W, where P is the percieved width in pixels, D is the distance to the object,
-  // and W is actual object width.
-  printf("Distances size: %d", distances.size());
 
-  distances.clear();
-
-  float bar_width = 75; // mm
-
-  float test_width = 100; // pixels, experimentally defined
-  float test_distance = 500; // mm, experimentally defined
-
-  float focal_length = (test_width * test_distance) / bar_width;
-  // When the focal length is calculated, the distance to new objects can be determined.
-  // D = (W x F) / P
-  for(int i = 0; i < bars.size(); i++)
-  {
-    //distances[i] = ( bar_width * focal_length ) / bars[i].re_width();
-    //printf("bars found\n");
-  }
-
-
-  return 1;
-}
-
-int feature_detection::collison_risk(int global_react)
+int feature_detection::collision_risk(int global_react)
 {
   // ------------- Distance Calculation ------------
   // In order to calculate the distance to the identified objects, a "real" bar width is determined.
@@ -322,8 +293,7 @@ int feature_detection::collison_risk(int global_react)
   // D = (W x F) / P
   for(int i = 0; i < bars.size(); i++)
   {
-    //distances[i] = ( bar_width * focal_length ) / bars[i].re_width();
-    distances[i] = 100;
+    distances[i].push_back(( bar_width * focal_length ) / bars[i].re_width());
     //printf("bars found\n");
   }
   // Return the smallest distance in the vector.

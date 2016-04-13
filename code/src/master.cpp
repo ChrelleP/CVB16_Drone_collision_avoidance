@@ -91,7 +91,7 @@ void *CV_avoid(void *arg)
      pthread_mutex_unlock( &reaction_mutex );
 
      printf("Collision risk 2 started \n");
-     local_reaction = FT.collison_risk2(temp_reaction);
+     local_reaction = FT.collision_risk(temp_reaction);
      printf("Collision risk 2 ended \n");
 
      pthread_mutex_lock( &reaction_mutex );
