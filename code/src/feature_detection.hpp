@@ -21,10 +21,12 @@
 #include <math.h>
 
 // DEFINES
+#define REACT_NOTHING        0
 #define REACT_STOP           1
 #define REACT_FEEDBACK       2
-#define REACT_LEFT           3
-#define REACT_HALFSPEED      4
+#define REACT_HALFSPEED      3
+#define REACT_LEFT           4
+#define REACT_RIGHT          5
 
 using namespace std;
 using namespace cv;
