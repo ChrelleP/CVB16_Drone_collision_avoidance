@@ -84,12 +84,13 @@ void *CV_avoid(void *arg)
      FT.filter_houghlines();
      FT.identify_objects();
 
+     int temp_reaction;
 
      pthread_mutex_lock( &reaction_mutex );
-     local_reaction = global_reaction;
+     temp_reaction = global_reaction;
      pthread_mutex_unlock( &reaction_mutex );
 
-     local_reaction = FT.collison_risk(local_reaction);
+     local_reaction = FT.collison_risk(temp_reaction);
      printf("Collision risk ended \n");
 
      pthread_mutex_lock( &reaction_mutex );
@@ -211,7 +212,8 @@ int main ()
             default:         break;
           }
           break;
-
+       case STATE_HALFSPEED:
+          break;
        default: cout << "Error in state" << endl;
                 abort = true;
                      break;
