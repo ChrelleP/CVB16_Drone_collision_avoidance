@@ -56,7 +56,7 @@ class feature_detection
     void identify_objects();
 
     int collison_risk(int global_react);
-    int collision_risk(int temp);
+    int collison_risk2(int temp);
 
   	~feature_detection();
 
