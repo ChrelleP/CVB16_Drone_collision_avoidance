@@ -275,6 +275,7 @@ float feature_detection::calc_distance()
   // To calculate the distance to the bars, the focal length needs to be determined.
   // F = (P x D) / W, where P is the percieved width in pixels, D is the distance to the object,
   // and W is actual object width.
+  printf("Calculating distance");
   float bar_width = 75; // mm
 
   float test_width = 100; // pixels, experimentally defined
@@ -301,6 +302,8 @@ float feature_detection::calc_distance()
       shortest_distance = distances[i];
   }
   distances.clear();
+
+  printf("Returning distance");
   return shortest_distance;
 }
 int feature_detection::collison_risk(int global_react)
@@ -318,7 +321,7 @@ int feature_detection::collison_risk(int global_react)
 
   else
     return REACT_FEEDBACK;
-    
+
 }
 feature_detection::~feature_detection()
 {

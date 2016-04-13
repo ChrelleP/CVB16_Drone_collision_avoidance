@@ -146,7 +146,7 @@ int main ()
   {
     // --------- Recieve -----------
     RX = DSM_UART.DSM_analyse(false, TX);
-
+    /*
     printf("------- Transmitted -------\n");
     printf("channel 0 = %d \n", TX.channel_value[0]);
     printf("channel 1 = %d \n", TX.channel_value[1]);
@@ -166,6 +166,7 @@ int main ()
     printf("channel 6 = %d \n", RX.channel_value[6]);
 
     system("clear");
+    */
 
     // --------- State machine ----------
     // Retrieve reaction
