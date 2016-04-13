@@ -29,8 +29,9 @@ using namespace cv;
 #define REACT_NOTHING        0
 #define REACT_STOP           1
 #define REACT_FEEDBACK       2
-#define REACT_LEFT           3
-#define REACT_HALFSPEED      4
+#define REACT_HALFSPEED      3
+#define REACT_LEFT           4
+#define REACT_RIGHT          5
 
 #define THROTTLE             6
 #define YAW                  2
@@ -203,14 +204,14 @@ int main ()
           // Update state
           switch(local_reaction)
           {
-            case REACT_STOP: state = STATE_STOP;
-                             break;
+            case REACT_FEEDBACK: state = STATE_FEEDBACK;
+                                 break;
             case REACT_LEFT: state = STATE_STOP;
                              break;
             default:         break;
           }
           break;
-       
+
        default: cout << "Error in state" << endl;
                 abort = true;
                      break;

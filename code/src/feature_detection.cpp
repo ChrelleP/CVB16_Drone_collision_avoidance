@@ -311,19 +311,28 @@ int feature_detection::collison_risk(int global_react)
 {
   printf("Collision risk started\n");
   float distance_temp = calc_distance();
+  printf("Distance calculated\n");
 
   if(distance_temp <= 4 && (global_react != REACT_STOP))
+  {
+    printf("react halfspeed 1\n");
     return REACT_HALFSPEED;
-
+  }
   else if(distance_temp <= 2)
+  {
+    printf("react stop\n");
     return REACT_STOP;
-
+  }
   else if(distance_temp <= 4)
+  {
+    printf("react halfspeed 2\n");
     return REACT_HALFSPEED;
-
+  }
   else
+  {
+    printf("react feecback\n");
     return REACT_FEEDBACK;
-
+  }
 }
 feature_detection::~feature_detection()
 {
