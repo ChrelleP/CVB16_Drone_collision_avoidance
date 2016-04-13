@@ -287,7 +287,7 @@ float feature_detection::calc_distance()
   float focal_length = (test_width * test_distance) / bar_width;
   // When the focal length is calculated, the distance to new objects can be determined.
   // D = (W x F) / P
-  if(bars.size())
+  if(bars.size() == 0)
   {
     return 100000;
   }

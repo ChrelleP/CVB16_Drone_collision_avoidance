@@ -327,7 +327,7 @@ void DSM_RX_TX::RX_TX()
                                 package_in.byte_L[0] = byte_in;
                                 BYTE_TYPE = HIGH;
                                 sync_value = (256*old_byte_in)+byte_in;
-                                printf("******* Preamble ********* Sync_val: %i\n",sync_value);
+                                //printf("******* Preamble ********* Sync_val: %i\n",sync_value);
 
                                 if(sync_value == sync_value_expected
                                     || (((sync_value_expected_next - SYNC_TOLERANCE) < sync_value)
