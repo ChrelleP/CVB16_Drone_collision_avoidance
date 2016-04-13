@@ -295,7 +295,7 @@ float feature_detection::calc_distance()
     if(distances[i] < shortest_distance)
       shortest_distance = distances[i];
   }
-
+  
   return shortest_distance;
 }
 int feature_detection::collison_risk(int global_react)
