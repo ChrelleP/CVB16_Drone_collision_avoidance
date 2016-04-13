@@ -293,7 +293,9 @@ float feature_detection::calc_distance()
 
   for(int i = 0; i < bars.size(); i++)
   {
-    distances[i] = ( bar_width * focal_length ) / bars[i].re_width();
+    //distances[i] = ( bar_width * focal_length ) / bars[i].re_width();
+    distances[i] = 100;
+    printf("bars found\n");
   }
   // Return the smallest distance in the vector.
   float shortest_distance = 1000000;
@@ -312,6 +314,7 @@ int feature_detection::collison_risk(int global_react)
   printf("Collision risk started\n");
   float distance_temp = calc_distance();
   printf("Distance calculated\n");
+
 
   if(distance_temp <= 4 && (global_react != REACT_STOP))
   {

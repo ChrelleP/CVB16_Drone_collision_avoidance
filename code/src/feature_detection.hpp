@@ -74,4 +74,6 @@ class feature_detection
 
     vector<object> bars;
     vector<float> distances;
+
+
 };
