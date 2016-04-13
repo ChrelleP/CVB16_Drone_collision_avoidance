@@ -22,10 +22,10 @@ using namespace cv;
 
 // ----------------------------- DEFINES ---------------------------------------
 
-#define STATE_FEEDBACK       1
-#define STATE_STOP           2
-#define STATE_AVOID          3
-#define STATE_HALFSPEED      4
+#define STATE_STOP           1
+#define STATE_FEEDBACK       2
+#define STATE_HALFSPEED      3
+#define STATE_CHANGING       4
 
 #define REACT_NOTHING        0
 #define REACT_STOP           1
