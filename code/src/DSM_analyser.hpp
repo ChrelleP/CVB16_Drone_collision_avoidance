@@ -338,7 +338,7 @@ void DSM_RX_TX::RX_TX()
                                 }
                                 else
                                 {
-                                    printf("Switching to UNSAFE mode due to bad sync\n");
+                                    //printf("Switching to UNSAFE mode due to bad sync\n");
                                     safe_zone_syncs = 0;
                                     last_sync_dist = 0;
                                     safe_mode = false;

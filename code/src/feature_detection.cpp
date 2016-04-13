@@ -277,7 +277,7 @@ int feature_detection::collison_risk(int global_react)
   // To calculate the distance to the bars, the focal length needs to be determined.
   // F = (P x D) / W, where P is the percieved width in pixels, D is the distance to the object,
   // and W is actual object width.
-  printf("In method collision");
+  //printf("In method collision");
 
   distances.clear();
 
@@ -293,7 +293,7 @@ int feature_detection::collison_risk(int global_react)
   {
     //distances[i] = ( bar_width * focal_length ) / bars[i].re_width();
     distances[i] = 100;
-    printf("bars found\n");
+    //printf("bars found\n");
   }
   // Return the smallest distance in the vector.
   float shortest_distance = 1000000;
@@ -307,22 +307,22 @@ int feature_detection::collison_risk(int global_react)
 
   if(shortest_distance <= 4000 && (global_react != REACT_STOP))
   {
-    printf("react halfspeed 1\n");
+    //printf("react halfspeed 1\n");
     return REACT_HALFSPEED;
   }
   else if(shortest_distance <= 2000)
   {
-    printf("react stop\n");
+    //printf("react stop\n");
     return REACT_STOP;
   }
   else if(shortest_distance <= 4000)
   {
-    printf("react halfspeed 2\n");
+    //printf("react halfspeed 2\n");
     return REACT_HALFSPEED;
   }
   else
   {
-    printf("react feecback\n");
+    //printf("react feecback\n");
     return REACT_FEEDBACK;
   }
 }
