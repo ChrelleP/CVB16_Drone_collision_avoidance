@@ -287,6 +287,7 @@ float feature_detection::calc_distance()
   // D = (W x F) / P
   if(bars.size() == 0)
   {
+    printf("Returning default distance");
     return 1000000;
   }
 
