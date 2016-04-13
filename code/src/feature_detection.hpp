@@ -60,8 +60,6 @@ class feature_detection
   	~feature_detection();
 
   private:
-    float calc_distance();
-
     const char* filename;
 
     Mat filtered;

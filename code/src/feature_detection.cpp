@@ -269,12 +269,6 @@ void feature_detection::identify_objects()
   }
 }
 
-float feature_detection::calc_distance()
-{
-
-  return shortest_distance;
-}
-
 int feature_detection::collison_risk(int global_react)
 {
   // ------------- Distance Calculation ------------
