@@ -293,8 +293,7 @@ int feature_detection::collision_risk(int global_react)
   // D = (W x F) / P
   for(int i = 0; i < bars.size(); i++)
   {
-    float temp = ( bar_width * focal_length ) / bars[i].re_width();
-    distances[i].push_back(temp);
+    distances.push_back( ( bar_width * focal_length ) / bars[i].re_width() );
     //printf("bars found\n");
   }
   // Return the smallest distance in the vector.
