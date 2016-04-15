@@ -35,17 +35,10 @@ using namespace cv;
 #define REACT_RIGHT          5
 
 #define THROTTLE             6
-#define YAW                  2
-#define PITCH                3
-#define PAN                  4
-
-#define CHANNEL0_DEFAULT    334
-#define CHANNEL1_DEFAULT    1190
-#define CHANNEL2_DEFAULT    1114
-#define CHANNEL3_DEFAULT    1022
-#define CHANNEL4_DEFAULT    1704
-#define CHANNEL5_DEFAULT    340
-#define CHANNEL6_DEFAULT    0
+#define YAW                  4      // Right -- | Left ++
+#define PITCH                2      // Forward -- | Backwards ++
+#define ROLL                 0      // Left -- | Right ++
+#define FLIGHT_MODE          3      // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
 
 // --------------------------- GLOBAL VARIABLES --------------------------------
 
@@ -138,6 +131,11 @@ int main ()
   int stop_value = 0;
   int packet_counter = 0;
 
+  int throttle_default = CHANNEL6_DEFAULT;
+  int yaw_default = CHANNEL4_DEFAULT;
+  int pitch_default = CHANNEL2_DEFAULT;
+  int roll_default = CHANNEL0_DEFAULT;
+
   bool abort = false;
 
   package RX;
@@ -150,6 +148,13 @@ int main ()
   TX.channel_value[4] = CHANNEL4_DEFAULT;
   TX.channel_value[5] = CHANNEL5_DEFAULT;
   TX.channel_value[6] = CHANNEL6_DEFAULT;
+
+  RX = DSM_UART.DSM_analyse(true, TX);
+
+  throttle_default = RX.channel_value[THROTTLE];
+  yaw_default = RX.channel_value[YAW];
+  pitch_default = RX.channel_value[PITCH];
+  roll_default = RX.channel_value[ROLL];
 
   // ------- Main loop -----------
   while(!abort)
@@ -210,7 +215,10 @@ int main ()
           // Keep constant throttle, everything else 0.
           TX = RX;
 
-          //if(RX.channel_value[PITCH] < )
+          if(RX.channel_value[PITCH] < pitch_default){
+            TX.channel_value[PITCH] = pitch_default;
+          }
+
           //TX.channel_value[PITCH] = ;
 
           // Update state
