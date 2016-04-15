@@ -176,16 +176,6 @@ int main ()
           // _________ FEEDBACK STATE _____________
           TX = RX;
 
-          // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
-          temp_FM = RX.channel_value[FLIGHT_MODE];
-
-          if(temp_FM > 300 && temp_FM < 400)
-            state = STATE_FEEDBACK;
-          if(temp_FM > 1150 && temp_FM < 1250)
-            state = STATE_HALFSPEED;
-          if(temp_FM > 1650 && temp_FM < 1750)
-            state = STATE_STOP;
-
           // Update state
           switch(local_reaction)
           {
@@ -212,16 +202,6 @@ int main ()
           TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) / 2 ) + roll_default;
           TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) / 2 ) + yaw_default;
 
-          // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
-          temp_FM = RX.channel_value[FLIGHT_MODE];
-
-          if(temp_FM > 300 && temp_FM < 400)
-            state = STATE_FEEDBACK;
-          if(temp_FM > 1150 && temp_FM < 1250)
-            state = STATE_HALFSPEED;
-          if(temp_FM > 1650 && temp_FM < 1750)
-            state = STATE_STOP;
-
           // Update state
           switch(local_reaction)
           {
@@ -241,16 +221,6 @@ int main ()
           TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) / 2 ) + roll_default;
           TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) / 2 ) + yaw_default;
 
-          // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
-          temp_FM = RX.channel_value[FLIGHT_MODE];
-
-          if(temp_FM > 300 && temp_FM < 400)
-            state = STATE_FEEDBACK;
-          if(temp_FM > 1150 && temp_FM < 1250)
-            state = STATE_HALFSPEED;
-          if(temp_FM > 1650 && temp_FM < 1750)
-            state = STATE_STOP;
-
           // Update state
           switch(local_reaction)
           {
@@ -266,6 +236,17 @@ int main ()
                 abort = true;
                      break;
     }
+
+    // Manual state changer
+    // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
+    temp_FM = RX.channel_value[FLIGHT_MODE];
+
+    if(temp_FM > 300 && temp_FM < 400)
+      state = STATE_FEEDBACK;
+    if(temp_FM > 1150 && temp_FM < 1250)
+      state = STATE_HALFSPEED;
+    if(temp_FM > 1650 && temp_FM < 1750)
+      state = STATE_STOP;
 
     // Printing information
     system("clear"); // Clear terminal
