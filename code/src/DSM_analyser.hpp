@@ -67,7 +67,8 @@ public: // Methods
 private: // Methods
     long long currentTimeUs();
     void set_channel_value(package &p,int channel, int value);
-    void get_channel_value(package &p);
+    void decode_channel_value(package &p, int byte);
+    void decode_packet(package &p_in);
     void change_packet_values(package &p_in, package &p_out);
     void RX_TX();
 private: // Variables
@@ -197,18 +198,33 @@ void DSM_RX_TX::set_channel_value(package &p,int channel, int value)
    p.byte_L[channel+1] = (value & 0xFF);
 }
 
-void DSM_RX_TX::get_channel_value(package &p)
+void DSM_RX_TX::decode_channel_value(package &p,int byte)
 /*****************************************************************************
-*   Input    : Package
-*   Output   : Package with channel values matching the high and low bytes.
-*   Function : Transforms the received bytes into channel values
+*   Input    : Package, byte number
+*   Output   : Changes the package channel content
+*   Function : ??
 ******************************************************************************/
 {
-   for(int i = 0; i < 7; i++)
-   {
-     p.channel_value[i] = ( 256 * (p.byte_H[i + 1] & 7) ) + p.byte_L[i + 1];
-   }
+    int chan_num = (p.byte_H[byte+1]>>3) & 0x0f;
+    p.channel_value[chan_num] = ((p.byte_H[byte+1] & 0x07)<<8) | p.byte_L[byte+1];
 }
+
+void DSM_RX_TX::decode_packet(package &p_in)
+/*****************************************************************************
+*   Input    : 1 packet
+*   Output   : Decoded values inside struct
+*   Function : Decodes all the channel values
+******************************************************************************/
+{
+    decode_channel_value(p_in, 0);
+    decode_channel_value(p_in, 1);
+    decode_channel_value(p_in, 2);
+    decode_channel_value(p_in, 3);
+    decode_channel_value(p_in, 4);
+    decode_channel_value(p_in, 5);
+    decode_channel_value(p_in, 6);
+}
+
 
 void DSM_RX_TX::change_packet_values(package &p_in, package &p_out)
 /*****************************************************************************
@@ -365,7 +381,7 @@ void DSM_RX_TX::RX_TX()
                                 BYTE_TYPE = HIGH;
                                 if (byte_counter >= BYTES_IN_FRAME) // If end of frame note this
                                 {
-                                    get_channel_value(package_in); // Change channel values into the new values
+                                    decode_packet(package_in); // Change channel values into the new values
                                     DSM_STATE = DSM_S_IDLE; // Complete packet has been recieved so go into idle
                                     packet_modified = false; // Indicate for IDLE mode that is has to modify the packet if nessecary
                                     safe_mode = true; // Indicate that it has to return to SAFE mode from IDLE mode when a byte is received
