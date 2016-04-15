@@ -39,6 +39,14 @@ using namespace cv;
 #define PITCH                3
 #define PAN                  4
 
+#define CHANNEL0_DEFAULT    334
+#define CHANNEL1_DEFAULT    1190
+#define CHANNEL2_DEFAULT    1114
+#define CHANNEL3_DEFAULT    1022
+#define CHANNEL4_DEFAULT    1704
+#define CHANNEL5_DEFAULT    340
+#define CHANNEL6_DEFAULT    0
+
 // --------------------------- GLOBAL VARIABLES --------------------------------
 
 volatile int global_reaction;
@@ -120,9 +128,9 @@ int main ()
   pthread_t CV_thread;
   int CV_rc;
 
-  CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
-  if( CV_rc )
-    printf("Thread creation failed: %d\n", CV_rc);
+  //CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
+  //if( CV_rc )
+    //printf("Thread creation failed: %d\n", CV_rc);
 
   // ------ Variables -------------
   int state = STATE_FEEDBACK;
@@ -202,7 +210,8 @@ int main ()
           // Keep constant throttle, everything else 0.
           TX = RX;
 
-          TX.channel_value[6] = stop_value;
+          if(RX.channel_value[PITCH] < )
+          TX.channel_value[PITCH] = ;
 
           // Update state
           switch(local_reaction)
