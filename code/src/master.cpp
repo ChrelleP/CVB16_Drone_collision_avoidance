@@ -149,7 +149,7 @@ int main ()
   TX.channel_value[5] = CHANNEL5_DEFAULT;
   TX.channel_value[6] = CHANNEL6_DEFAULT;
 
-  RX = DSM_UART.DSM_analyse(true, TX); // Receive a single frame for finding default values.
+  RX = DSM_UART.DSM_analyse(false, TX); // Receive a single frame for finding default values.
 
   throttle_default = RX.channel_value[THROTTLE];
   yaw_default = RX.channel_value[YAW];
