@@ -97,9 +97,9 @@ void *CV_avoid(void *arg)
      global_reaction = local_reaction;
      pthread_mutex_unlock( &reaction_mutex );
 
-     FT.draw_objects();
+     //FT.draw_objects();
 
-     FT.show_source();
+     //FT.show_source();
      //FT.show_filter();
      //FT.show_edge_map();
 
@@ -121,9 +121,9 @@ int main ()
   pthread_t CV_thread;
   int CV_rc;
 
-  //CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
-  //if( CV_rc )
-    //printf("Thread creation failed: %d\n", CV_rc);
+  CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
+  if( CV_rc )
+    printf("Thread creation failed: %d\n", CV_rc);
 
   // ------ Variables -------------
   int state = STATE_FEEDBACK;
