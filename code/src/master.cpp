@@ -210,8 +210,8 @@ int main ()
           // Keep constant throttle, everything else 0.
           TX = RX;
 
-          if(RX.channel_value[PITCH] < )
-          TX.channel_value[PITCH] = ;
+          //if(RX.channel_value[PITCH] < )
+          //TX.channel_value[PITCH] = ;
 
           // Update state
           switch(local_reaction)
