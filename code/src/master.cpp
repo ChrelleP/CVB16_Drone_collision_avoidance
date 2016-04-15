@@ -16,6 +16,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "DSM_analyser.hpp"
+#include "wiringPi.h"
 
 using namespace std;
 using namespace cv;
@@ -107,6 +108,17 @@ void *CV_avoid(void *arg)
 
 int main ()
 {
+  wiringPiSetup () ;
+  pinMode (16, OUTPUT) ;
+  for (;;)
+  {
+    digitalWrite (16, HIGH) ; delay (500) ;
+    digitalWrite (16,  LOW) ; delay (500) ;
+  }
+
+
+
+
   // -------- Startup ---------
   DSM_RX_TX DSM_UART;
 
