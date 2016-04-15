@@ -160,29 +160,14 @@ int main ()
   // ------- Main loop -----------
   while(!abort)
   {
-    system("clear"); // Clear terminal
-
     // --------- Recieve -----------
     RX = DSM_UART.DSM_analyse(false, TX);
-
-
-    printf("---------- PACKETS ----------\n");
-    printf("channel 0 | TX: %d \t RX: %d \n", TX.channel_value[0], RX.channel_value[0]);
-    printf("channel 1 | TX: %d \t RX: %d \n", TX.channel_value[1], RX.channel_value[1]);
-    printf("channel 2 | TX: %d \t RX: %d \n", TX.channel_value[2], RX.channel_value[2]);
-    printf("channel 3 | TX: %d \t RX: %d \n", TX.channel_value[3], RX.channel_value[3]);
-    printf("channel 4 | TX: %d \t RX: %d \n", TX.channel_value[4], RX.channel_value[4]);
-    printf("channel 5 | TX: %d \t RX: %d \n", TX.channel_value[5], RX.channel_value[5]);
-    printf("channel 6 | TX: %d \t RX: %d \n", TX.channel_value[6], RX.channel_value[6]);
 
     // --------- State machine ----------
     // Retrieve reaction
     pthread_mutex_lock( &reaction_mutex );
     local_reaction = global_reaction;
     pthread_mutex_unlock( &reaction_mutex );
-
-    printf("\n ------ States And Reacts -------\n");
-    printf(" State: %d    React: %d \n", state, local_reaction);
 
     // Switch on the state
     switch(state)
@@ -281,6 +266,24 @@ int main ()
                 abort = true;
                      break;
     }
+
+    // Printing information
+    system("clear"); // Clear terminal
+
+    printf("---------- PACKETS ----------\n");
+    printf("channel 0 | TX: %d \t RX: %d \n", TX.channel_value[0], RX.channel_value[0]);
+    printf("channel 1 | TX: %d \t RX: %d \n", TX.channel_value[1], RX.channel_value[1]);
+    printf("channel 2 | TX: %d \t RX: %d \n", TX.channel_value[2], RX.channel_value[2]);
+    printf("channel 3 | TX: %d \t RX: %d \n", TX.channel_value[3], RX.channel_value[3]);
+    printf("channel 4 | TX: %d \t RX: %d \n", TX.channel_value[4], RX.channel_value[4]);
+    printf("channel 5 | TX: %d \t RX: %d \n", TX.channel_value[5], RX.channel_value[5]);
+    printf("channel 6 | TX: %d \t RX: %d \n", TX.channel_value[6], RX.channel_value[6]);
+
+    printf("\n ------ States And Reacts -------\n");
+    printf(" State: %d \t React: %d \n", state, local_reaction);
+
+    printf("\n ------ Default values -------\n");
+    printf(" Pitch: %d \t Roll: %d \t Yaw: %d \t Throttle: %d \n", pitch_default, roll_default, yaw_default, throttle_default);
 
     if(RX.channel_value[1] > 1000) // Stop at bind/panic button
       abort = true;
