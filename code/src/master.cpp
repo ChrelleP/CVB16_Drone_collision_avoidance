@@ -266,8 +266,8 @@ int main ()
     printf("\n ------ Default values -------\n");
     printf(" Pitch: %d \t Roll: %d \t Yaw: %d \t Throttle: %d \n", pitch_default, roll_default, yaw_default, throttle_default);
 
-    if(RX.channel_value[1] > 1000) // Stop at bind/panic button
-      abort = true;
+    //if(RX.channel_value[1] > 1000) // Stop at bind/panic button
+      //abort = true;
   }
 
   DSM_UART.DSM_analyse(true, RX);
