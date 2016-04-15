@@ -121,9 +121,9 @@ int main ()
   pthread_t CV_thread;
   int CV_rc;
 
-  CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
-  if( CV_rc )
-    printf("Thread creation failed: %d\n", CV_rc);
+  //CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
+  //if( CV_rc )
+    //printf("Thread creation failed: %d\n", CV_rc);
 
   // ------ Variables -------------
   int state = STATE_FEEDBACK;
@@ -199,6 +199,16 @@ int main ()
           // _________ FEEDBACK STATE _____________
           TX = RX;
 
+          // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
+          int temp_FM = RX.channel_value[FLIGHT_MODE];
+
+          if(temp_FM > 300 && temp_FM < 400)
+            state = STATE_FEEDBACK;
+          if(temp_FM > 1150 && temp_FM < 1250)
+            state = STATE_HALFSPEED;
+          if(temp_FM > 1650 && temp_FM < 1750)
+            state = STATE_STOP;
+
           // Update state
           switch(local_reaction)
           {
@@ -225,7 +235,15 @@ int main ()
           TX.channel_value[ROLL] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
           TX.channel_value[YAW] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
 
-          //TX.channel_value[PITCH] = ;
+          // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
+          int temp_FM = RX.channel_value[FLIGHT_MODE];
+
+          if(temp_FM > 300 && temp_FM < 400)
+            state = STATE_FEEDBACK;
+          if(temp_FM > 1150 && temp_FM < 1250)
+            state = STATE_HALFSPEED;
+          if(temp_FM > 1650 && temp_FM < 1750)
+            state = STATE_STOP;
 
           // Update state
           switch(local_reaction)
@@ -245,6 +263,16 @@ int main ()
           TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
           TX.channel_value[ROLL] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
           TX.channel_value[YAW] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
+
+          // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
+          int temp_FM = RX.channel_value[FLIGHT_MODE];
+
+          if(temp_FM > 300 && temp_FM < 400)
+            state = STATE_FEEDBACK;
+          if(temp_FM > 1150 && temp_FM < 1250)
+            state = STATE_HALFSPEED;
+          if(temp_FM > 1650 && temp_FM < 1750)
+            state = STATE_STOP;
 
           // Update state
           switch(local_reaction)
