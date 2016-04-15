@@ -233,8 +233,8 @@ int main ()
             TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
           }
 
-          TX.channel_value[ROLL] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
-          TX.channel_value[YAW] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
+          TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - pitch_default) / 2 ) + pitch_default;
+          TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - pitch_default) / 2 ) + pitch_default;
 
           // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
           temp_FM = RX.channel_value[FLIGHT_MODE];
@@ -262,8 +262,8 @@ int main ()
           TX = RX;
 
           TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
-          TX.channel_value[ROLL] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
-          TX.channel_value[YAW] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
+          TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - pitch_default) / 2 ) + pitch_default;
+          TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - pitch_default) / 2 ) + pitch_default;
 
           // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
           temp_FM = RX.channel_value[FLIGHT_MODE];
