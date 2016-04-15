@@ -167,13 +167,13 @@ int main ()
 
 
     printf("---------- PACKETS ----------\n");
-    printf("channel 0 | TX: %d    RX: %d \n", TX.channel_value[0], RX.channel_value[0]);
-    printf("channel 1 | TX: %d    RX: %d \n", TX.channel_value[1], RX.channel_value[1]);
-    printf("channel 2 | TX: %d    RX: %d \n", TX.channel_value[2], RX.channel_value[2]);
-    printf("channel 3 | TX: %d    RX: %d \n", TX.channel_value[3], RX.channel_value[3]);
-    printf("channel 4 | TX: %d    RX: %d \n", TX.channel_value[4], RX.channel_value[4]);
-    printf("channel 5 | TX: %d    RX: %d \n", TX.channel_value[5], RX.channel_value[5]);
-    printf("channel 6 | TX: %d    RX: %d \n", TX.channel_value[6], RX.channel_value[6]);
+    printf("channel 0 | TX: %d \t RX: %d \n", TX.channel_value[0], RX.channel_value[0]);
+    printf("channel 1 | TX: %d \t RX: %d \n", TX.channel_value[1], RX.channel_value[1]);
+    printf("channel 2 | TX: %d \t RX: %d \n", TX.channel_value[2], RX.channel_value[2]);
+    printf("channel 3 | TX: %d \t RX: %d \n", TX.channel_value[3], RX.channel_value[3]);
+    printf("channel 4 | TX: %d \t RX: %d \n", TX.channel_value[4], RX.channel_value[4]);
+    printf("channel 5 | TX: %d \t RX: %d \n", TX.channel_value[5], RX.channel_value[5]);
+    printf("channel 6 | TX: %d \t RX: %d \n", TX.channel_value[6], RX.channel_value[6]);
 
     // --------- State machine ----------
     // Retrieve reaction
@@ -281,6 +281,9 @@ int main ()
                 abort = true;
                      break;
     }
+
+    if(RX.channel_value[1] > 1000) // Stop at bind/panic button
+      abort = true;
   }
 
   DSM_UART.DSM_analyse(true, RX);
