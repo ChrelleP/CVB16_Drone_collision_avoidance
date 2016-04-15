@@ -34,11 +34,12 @@ using namespace cv;
 #define REACT_LEFT           4
 #define REACT_RIGHT          5
 
-#define THROTTLE             6
-#define YAW                  4      // Right -- | Left ++
+#define THROTTLE             0
+#define YAW                  3      // Right -- | Left ++
 #define PITCH                2      // Forward -- | Backwards ++
-#define ROLL                 0      // Left -- | Right ++
-#define FLIGHT_MODE          3      // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
+#define ROLL                 1      // Left -- | Right ++
+#define FLIGHT_MODE          4      // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
+#define PANIC_BIND           5
 
 // --------------------------- GLOBAL VARIABLES --------------------------------
 
@@ -132,10 +133,10 @@ int main ()
   int packet_counter = 0;
   int temp_FM;
 
-  int throttle_default = CHANNEL6_DEFAULT;
-  int yaw_default = CHANNEL4_DEFAULT;
+  int throttle_default = CHANNEL0_DEFAULT;
+  int yaw_default = CHANNEL3_DEFAULT;
   int pitch_default = CHANNEL2_DEFAULT;
-  int roll_default = CHANNEL0_DEFAULT;
+  int roll_default = CHANNEL1_DEFAULT;
 
   bool abort = false;
 
@@ -266,8 +267,8 @@ int main ()
     printf("\n ------ Default values -------\n");
     printf(" Pitch: %d \t Roll: %d \t Yaw: %d \t Throttle: %d \n", pitch_default, roll_default, yaw_default, throttle_default);
 
-    //if(RX.channel_value[1] > 1000) // Stop at bind/panic button
-      //abort = true;
+    if(RX.channel_value[PANIC_BIND] > 1000) // Stop at bind/panic button
+      abort = true;
   }
 
   DSM_UART.DSM_analyse(true, RX);

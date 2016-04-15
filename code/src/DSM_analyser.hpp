@@ -39,13 +39,13 @@ typedef struct package{
 #define SAFE_ZONE_THRESHOLD 50 // Approximate number of packets ins 10 seconds (packets come with a frequency of ~45,5Hz)
 #define RESET_SYNC_THRESHOLD 700
 #define FATAL_SYNC_THRESHOLD 2000
-#define CHANNEL0_DEFAULT    1006
-#define CHANNEL1_DEFAULT    340
-#define CHANNEL2_DEFAULT    922
-#define CHANNEL3_DEFAULT    340
-#define CHANNEL4_DEFAULT    1006
-#define CHANNEL5_DEFAULT    0
-#define CHANNEL6_DEFAULT    382
+#define CHANNEL0_DEFAULT    376
+#define CHANNEL1_DEFAULT    1016
+#define CHANNEL2_DEFAULT    920
+#define CHANNEL3_DEFAULT    1006
+#define CHANNEL4_DEFAULT    340
+#define CHANNEL5_DEFAULT    340
+#define CHANNEL6_DEFAULT    0
 #define CHANNEL_MAXVALUE    1700
 
 #define safe_mode_threshold 10 /* Amount of seconds before change from UNSAFE to SAFE mode */
@@ -243,6 +243,7 @@ void DSM_RX_TX::change_packet_values(package &p_in, package &p_out)
         set_channel_value(p_out,5,CHANNEL_MAXVALUE);
         set_channel_value(p_out,6,CHANNEL_MAXVALUE);
     } else {
+        set_channel_value(p_out,0,p_in.channel_value[0]+channel1_offset);
         set_channel_value(p_out,1,p_in.channel_value[1]+channel1_offset);
         set_channel_value(p_out,2,p_in.channel_value[2]+channel2_offset);
         set_channel_value(p_out,3,p_in.channel_value[3]+channel3_offset);
@@ -279,9 +280,6 @@ package DSM_RX_TX::DSM_analyse(bool loop, package modified_package)
         //printf("Package received\n");
         return package_in;
     }
-
-    // This should never happen
-    return package_in;
 }
 
 void DSM_RX_TX::RX_TX()
