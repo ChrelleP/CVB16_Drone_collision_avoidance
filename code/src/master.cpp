@@ -149,7 +149,7 @@ int main ()
   TX.channel_value[5] = CHANNEL5_DEFAULT;
   TX.channel_value[6] = CHANNEL6_DEFAULT;
 
-  RX = DSM_UART.DSM_analyse(true, TX);
+  RX = DSM_UART.DSM_analyse(true, TX); // Receive a single frame for finding default values.
 
   throttle_default = RX.channel_value[THROTTLE];
   yaw_default = RX.channel_value[YAW];
@@ -218,6 +218,12 @@ int main ()
           if(RX.channel_value[PITCH] < pitch_default){
             TX.channel_value[PITCH] = pitch_default;
           }
+          else{
+            TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
+          }
+
+          TX.channel_value[ROLL] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
+          TX.channel_value[YAW] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
 
           //TX.channel_value[PITCH] = ;
 
@@ -236,13 +242,9 @@ int main ()
           // Use half the speed
           TX = RX;
 
-          TX.channel_value[0] = TX.channel_value[0] / 2;
-          TX.channel_value[1] = TX.channel_value[1] / 2;
-          TX.channel_value[2] = TX.channel_value[2] / 2;
-          TX.channel_value[3] = TX.channel_value[3] / 2;
-          TX.channel_value[4] = TX.channel_value[4] / 2;
-          TX.channel_value[5] = TX.channel_value[5] / 2;
-          TX.channel_value[6] = TX.channel_value[6] / 2;
+          TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
+          TX.channel_value[ROLL] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
+          TX.channel_value[YAW] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
 
           // Update state
           switch(local_reaction)
