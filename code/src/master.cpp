@@ -130,6 +130,7 @@ int main ()
   int local_reaction = REACT_NOTHING;
   int stop_value = 0;
   int packet_counter = 0;
+  int temp_FM;
 
   int throttle_default = CHANNEL6_DEFAULT;
   int yaw_default = CHANNEL4_DEFAULT;
@@ -200,7 +201,7 @@ int main ()
           TX = RX;
 
           // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
-          int temp_FM = RX.channel_value[FLIGHT_MODE];
+          temp_FM = RX.channel_value[FLIGHT_MODE];
 
           if(temp_FM > 300 && temp_FM < 400)
             state = STATE_FEEDBACK;
@@ -236,7 +237,7 @@ int main ()
           TX.channel_value[YAW] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
 
           // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
-          int temp_FM = RX.channel_value[FLIGHT_MODE];
+          temp_FM = RX.channel_value[FLIGHT_MODE];
 
           if(temp_FM > 300 && temp_FM < 400)
             state = STATE_FEEDBACK;
@@ -265,7 +266,7 @@ int main ()
           TX.channel_value[YAW] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
 
           // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
-          int temp_FM = RX.channel_value[FLIGHT_MODE];
+          temp_FM = RX.channel_value[FLIGHT_MODE];
 
           if(temp_FM > 300 && temp_FM < 400)
             state = STATE_FEEDBACK;
