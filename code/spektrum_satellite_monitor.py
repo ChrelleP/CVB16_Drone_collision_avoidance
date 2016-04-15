@@ -10,7 +10,7 @@
 # 2016-03-04 Kjeld Jensen kjen@mmmi.sdu.dk
 
 # parameters
-device = '/dev/ttyUSB0'
+device = '/dev/ttyAMA0'
 baudrate = 115200
 bit_11 = True
 
