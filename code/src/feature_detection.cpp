@@ -13,9 +13,9 @@ feature_detection::feature_detection(const char* file)
 
 void feature_detection::filter(int &lb, int &ub, int &as)
 {
-  inRange(source, Scalar(lb, lb, lb), Scalar(ub, ub, ub), filtered);
+  //inRange(source, Scalar(lb, lb, lb), Scalar(ub, ub, ub), filtered);
 
-  medianBlur(filtered, filtered, as);
+  medianBlur(source, filtered, as);
 }
 
 void feature_detection::edges(int &lb, int &ub, int &as)
@@ -85,7 +85,7 @@ void feature_detection::draw_objects()
   for( size_t i = 0; i < bars.size(); i++ )
   {
      float rho = bars[i].re_center(), theta = bars[i].re_angle();
-     //cout << "Drawing rho: " << rho << " and theta: " << theta << " and width: " << bars[i].re_width() << endl;
+     cout << "Drawing rho: " << rho << " and theta: " << theta << " and width: " << bars[i].re_width() << endl;
      Point pt1, pt2;
      double a = cos(theta), b = sin(theta);
      double x0 = a*rho, y0 = b*rho;

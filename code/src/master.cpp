@@ -52,14 +52,14 @@ void *CV_avoid(void *arg)
 {
    //------------- Create objects and variables -------------
    feature_detection FT;   // Feature Detection object - used for CV methods
-   VideoCapture cap("FVS_3.avi");       // Video Capture object - used to get frames from video
+   VideoCapture cap("focallength_112.avi");       // Video Capture object - used to get frames from video
 
    //------------- Variables --------------------------------
    int local_reaction = REACT_NOTHING;
    int temp_reaction = REACT_NOTHING;
 
-   int LB_MASK = 65;                 // Lower bound for mask
-   int UB_MASK = 98;                 // Upper bound for mask
+   int LB_MASK = 0;                 // Lower bound for mask
+   int UB_MASK = 255;                 // Upper bound for mask
    int AS_MEDIAN = 7;                  // Apperture size for median filter
 
    int LB_CANNY = 150;                // Lower bound for canny
@@ -98,11 +98,12 @@ void *CV_avoid(void *arg)
      global_reaction = local_reaction;
      pthread_mutex_unlock( &reaction_mutex );
 
-     //FT.draw_objects();
-
-     //FT.show_source();
+     FT.draw_objects();
+     FT.draw_filtered_lines();
+     FT.draw_lines();
+     FT.show_source();
      //FT.show_filter();
-     //FT.show_edge_map();
+     FT.show_edge_map();
 
      if(waitKey(33) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
      {
@@ -122,9 +123,9 @@ int main ()
   pthread_t CV_thread;
   int CV_rc;
 
-  //CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
-  //if( CV_rc )
-    //printf("Thread creation failed: %d\n", CV_rc);
+  CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
+  if( CV_rc )
+    printf("Thread creation failed: %d\n", CV_rc);
 
   // ------ Variables -------------
   int state = STATE_FEEDBACK;
