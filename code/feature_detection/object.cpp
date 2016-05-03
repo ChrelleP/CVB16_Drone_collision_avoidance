@@ -6,8 +6,8 @@ object::object()
 
 object::object(Vec2f first_line, Vec2f second_line)
 {
-  cout << "fl: " << first_line[0] << " sl: " << second_line[0] << endl;
-  cout << "fa: " << first_line[1] << " sa: " << second_line[1] << endl;
+  //cout << "fl: " << first_line[0] << " sl: " << second_line[0] << endl;
+  //cout << "fa: " << first_line[1] << " sa: " << second_line[1] << endl;
 
   lower_angle = min(first_line[1], second_line[1]);
   upper_angle = max(first_line[1], second_line[1]);
@@ -28,10 +28,12 @@ object::object(Vec2f first_line, Vec2f second_line)
   alive_count_upper = 10;
   alive_count_lower = 10;
 
+  /*
   cout << "---New object---" << endl;
   cout << "angle: " << angle << endl;
   cout << "center: " << center << endl;
   cout << "width: " << width << endl;
+  */
 }
 
 bool object::update(Vec2f &line)

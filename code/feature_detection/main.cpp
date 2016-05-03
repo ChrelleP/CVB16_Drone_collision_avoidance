@@ -25,8 +25,8 @@ int main(int argc, char** argv)
   feature_detection FT(filename);   // Feature Detection object - used for CV methods
   VideoCapture cap(filename);       // Video Capture object - used to get frames from video
 
-  int lb_mask = 70;                 // Lower bound for mask
-  int ub_mask = 100;                // Upper bound for mask
+  int lb_mask = 60;                 // Lower bound for mask
+  int ub_mask = 98;                // Upper bound for mask
   int as_median = 7;                // Apperture size for median filter
 
   int lb_canny = 150;               // Lower bound for canny
@@ -42,12 +42,14 @@ int main(int argc, char** argv)
   while(true)
   {
     bool success = cap.read(FT.source);           // read a new frame from video
-
+    /*
     const int kNewWidth = 600;
     const int kNewHeight = 600;
 
-    resize(FT.source, FT.source, cvSize(kNewWidth, kNewHeight));
+    const float kScaleFactor = 0.50;
 
+    //resize(FT.source, FT.source, cvSize(0, 0), kScaleFactor, kScaleFactor);
+    */
     if (!success)                                 //if not success, break loop
     {
       cout << "Could not read frame" << endl;
@@ -66,8 +68,8 @@ int main(int argc, char** argv)
     //FT.draw_lines();
 
     FT.show_source();
-    //FT.show_filter();
-    FT.show_edge_map();
+    FT.show_filter();
+    //FT.show_edge_map();
 
 /*
     ofstream myfile;
