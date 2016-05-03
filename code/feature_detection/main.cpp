@@ -43,6 +43,11 @@ int main(int argc, char** argv)
   {
     bool success = cap.read(FT.source);           // read a new frame from video
 
+    const int kNewWidth = 600;
+    const int kNewHeight = 600;
+
+    resize(FT.source, FT.source, cvSize(kNewWidth, kNewHeight));
+
     if (!success)                                 //if not success, break loop
     {
       cout << "Could not read frame" << endl;
@@ -61,7 +66,7 @@ int main(int argc, char** argv)
     //FT.draw_lines();
 
     FT.show_source();
-    FT.show_filter();
+    //FT.show_filter();
     FT.show_edge_map();
 
 /*
