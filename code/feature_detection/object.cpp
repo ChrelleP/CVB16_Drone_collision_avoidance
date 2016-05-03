@@ -141,12 +141,13 @@ float object::re_center()
 {
     return center;
 }
-float object:calc_distance()
+float object::calc_distance()
 {
 
 }
 void object::collison_risk()
 {
+  /*
   if(distance <= 4 && !full_stop)
   {
     half_speed = true;
@@ -162,12 +163,13 @@ void object::collison_risk()
     if(full_stop)
     {
       half_speed = true;
-      
+
     }
     else
     feecback = true;
     half_speed = false;
   }
+  */
 }
 object::~object()
 {

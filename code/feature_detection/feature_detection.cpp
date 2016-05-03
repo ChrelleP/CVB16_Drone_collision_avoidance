@@ -13,9 +13,9 @@ feature_detection::feature_detection(const char* file)
 
 void feature_detection::filter(int &lb, int &ub, int &as)
 {
-  inRange(source, Scalar(lb, lb, lb), Scalar(ub, ub, ub), filtered);
+  //inRange(source, Scalar(lb, lb, lb), Scalar(ub, ub, ub), filtered);
 
-  medianBlur(filtered, filtered, as);
+  medianBlur(source, filtered, as);
 }
 
 void feature_detection::edges(int &lb, int &ub, int &as)
@@ -209,7 +209,7 @@ void feature_detection::identify_objects()
         if( bars[k].update(filtered_lines[i]) )
         {
           updated = true;
-          cout << "Updated" << endl;
+          //cout << "Updated" << endl;
           break;
         }
     }
@@ -250,7 +250,7 @@ void feature_detection::identify_objects()
       }
      }
 
-     cout << "Bars: " << bars.size() << endl;
+     //cout << "Bars: " << bars.size() << endl;
 
      // For all the current bars, check to see if they are still "alive"
      for(int l = 0; l < bars.size(); l++)
@@ -262,13 +262,64 @@ void feature_detection::identify_objects()
        if(temp)
        {
          bars.erase(bars.begin()+l);
-         cout << "erasing" << endl;
+         //cout << "erasing" << endl;
        }
      }
 
   }
 }
+float feature_detection::calc_distance()
+{
+  // ------------- Distance Calculation ------------
+  // In order to calculate the distance to the identified objects, a "real" bar width is determined.
+  // For simplicity, this width is estimated to be 75mm.
+  // To calculate the distance to the bars, the focal length needs to be determined.
+  // F = (P x D) / W, where P is the percieved width in pixels, D is the distance to the object,
+  // and W is actual object width.
+  distances.clear();
 
+  float bar_width = 75; // mm
+
+  float test_width = 100; // pixels, experimentally defined
+  float test_distance = 500; // mm, experimentally defined
+
+
+  float focal_length = (test_width * test_distance) / bar_width;
+  // When the focal length is calculated, the distance to new objects can be determined.
+  // D = (W x F) / P
+  if(bars.size() == 0)
+  {
+    return 100000;
+  }
+
+  for(int i = 0; i < bars.size(); i++)
+  {
+    distances.push_back( ( bar_width * focal_length ) / bars[i].re_width() );
+    //printf("bars found\n");
+  }
+  // Return the smallest distance in the vector.
+  float shortest_distance = 1000000;
+  for(int i = 0; i < distances.size(); i++)
+  {
+    if(distances[i] < shortest_distance)
+      shortest_distance = distances[i];
+  }
+  return shortest_distance;
+}
+
+int feature_detection::collision_risk(int global_react)
+{
+  float temp_dist = calc_distance();
+
+  //printf("temp distance: %f\n", temp_dist);
+
+  if(temp_dist <= 600)
+    return REACT_STOP;
+  else if(temp_dist <= 700)
+    return REACT_HALFSPEED;
+  else
+    return REACT_FEEDBACK;
+}
 feature_detection::~feature_detection()
 {
 

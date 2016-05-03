@@ -1,33 +1,32 @@
 #include <iostream>
 #include <fstream>
 #include "feature_detection.hpp"
-#include "object.hpp"
+//#include "object.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 
 using namespace std;
 using namespace cv;
 
-//int main(int argc, char** argv)
-int main()
+int main(int argc, char** argv)
 {
   //----------------- Get video filename ------------------
- /* const char* filename;
+ const char* filename;
 
   if(argc == 2)
     filename = argv[1];
   else{
     cout << "Specify a name for video" << endl;
     return 0;
-  }*/
+  }
   //--------------------------------------------------------
 
   //------------- Create objects and variables -------------
-  feature_detection FT(0);   // Feature Detection object - used for CV methods
-  VideoCapture cap(0);       // Video Capture object - used to get frames from video
+  feature_detection FT(filename);   // Feature Detection object - used for CV methods
+  VideoCapture cap(filename);       // Video Capture object - used to get frames from video
 
-  int lb_mask = 65;                 // Lower bound for mask
-  int ub_mask = 98;                // Upper bound for mask
+  int lb_mask = 70;                 // Lower bound for mask
+  int ub_mask = 100;                // Upper bound for mask
   int as_median = 7;                // Apperture size for median filter
 
   int lb_canny = 150;               // Lower bound for canny
@@ -58,10 +57,12 @@ int main()
     FT.identify_objects();
 
     FT.draw_objects();
+    FT.draw_filtered_lines();
+    //FT.draw_lines();
 
     FT.show_source();
     FT.show_filter();
-    //FT.show_edge_map();
+    FT.show_edge_map();
 
 /*
     ofstream myfile;
@@ -70,7 +71,7 @@ int main()
     myfile.close();
 */
 
-    if(waitKey(10) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
+    if(waitKey(100) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
     {
       cout << "esc key is pressed by user" << endl;
       break;
