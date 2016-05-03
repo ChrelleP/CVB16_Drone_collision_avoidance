@@ -42,14 +42,14 @@ int main(int argc, char** argv)
   while(true)
   {
     bool success = cap.read(FT.source);           // read a new frame from video
-    /*
+    
     const int kNewWidth = 600;
     const int kNewHeight = 600;
 
-    const float kScaleFactor = 0.50;
+    const float kScaleFactor = 1.5;
 
-    //resize(FT.source, FT.source, cvSize(0, 0), kScaleFactor, kScaleFactor);
-    */
+    resize(FT.source, FT.source, cvSize(0, 0), kScaleFactor, kScaleFactor);
+
     if (!success)                                 //if not success, break loop
     {
       cout << "Could not read frame" << endl;
@@ -64,7 +64,7 @@ int main(int argc, char** argv)
     FT.identify_objects();
 
     FT.draw_objects();
-    FT.draw_filtered_lines();
+    //FT.draw_filtered_lines();
     //FT.draw_lines();
 
     FT.show_source();
