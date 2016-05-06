@@ -77,7 +77,7 @@ private: // Variables
     int ser_handle; // The serial connection (file descriptor)
     package package_in, package_out; // Packages for transmitting and receiving.
 
-    bool safe_mode = false; // Used when going from IDLE mode to either UNSAFE or SAFE
+    bool safe_mode = true; // Used when going from IDLE mode to either UNSAFE or SAFE
     bool fatal_error = false;
     bool modify_packets = true;
     bool packet_modified = true;
