@@ -11,6 +11,7 @@
 #include <fstream>
 #include "stdio.h"
 #include "wiringSerial.h"
+#include "wiringPi.h"
 #include "feature_detection.hpp"
 #include "object.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -120,6 +121,9 @@ int main ()
   // -------- Startup ---------
   DSM_RX_TX DSM_UART;
 
+  wiringPiSetup();
+  pinMode(0, OUTPUT);
+
   /*pthread_t CV_thread;
   int CV_rc;
 
@@ -152,13 +156,14 @@ int main ()
   TX.channel_value[5] = CHANNEL5_DEFAULT;
   TX.channel_value[6] = CHANNEL6_DEFAULT;
 
-  printf("Test1");
   RX = DSM_UART.DSM_analyse(false, TX); // Receive a single frame for finding default values.
-  printf("Test2");
+
   throttle_default = RX.channel_value[THROTTLE];
   yaw_default = RX.channel_value[YAW];
   pitch_default = RX.channel_value[PITCH];
   roll_default = RX.channel_value[ROLL];
+
+  digitalWrite(0, HIGH);
 
   // ------- Main loop -----------
   while(!abort)
