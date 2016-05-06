@@ -53,7 +53,7 @@ void *CV_avoid(void *arg)
 {
    //------------- Create objects and variables -------------
    feature_detection FT;   // Feature Detection object - used for CV methods
-   VideoCapture cap("focallength_112.avi");       // Video Capture object - used to get frames from video
+   VideoCapture cap(0);       // Video Capture object - used to get frames from video
 
    //------------- Variables --------------------------------
    int local_reaction = REACT_NOTHING;
