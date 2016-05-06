@@ -120,13 +120,13 @@ int main ()
   // -------- Startup ---------
   DSM_RX_TX DSM_UART;
 
-  pthread_t CV_thread;
+  /*pthread_t CV_thread;
   int CV_rc;
 
   CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
   if( CV_rc )
     printf("Thread creation failed: %d\n", CV_rc);
-
+  */
   // ------ Variables -------------
   int state = STATE_FEEDBACK;
   int local_reaction = REACT_NOTHING;
