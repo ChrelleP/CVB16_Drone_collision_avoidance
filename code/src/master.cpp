@@ -213,7 +213,7 @@ int main ()
           // Update state
           switch(local_reaction)
           {
-            case REACT_FEEDBACK: state = STATE_ECHO;
+            case REACT_ECHO: state = STATE_ECHO;
                                  break;
             case REACT_HALFSPEED: state = STATE_HALFSPEED;
                                   break;
@@ -232,7 +232,7 @@ int main ()
           // Update state
           switch(local_reaction)
           {
-            case REACT_FEEDBACK: state = STATE_ECHO;
+            case REACT_ECHO: state = STATE_ECHO;
                                  break;
             case REACT_STOP:     state = STATE_HALFSPEED;
                                  stop_value = TX.channel_value[6];
