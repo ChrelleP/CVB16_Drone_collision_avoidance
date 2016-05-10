@@ -24,13 +24,13 @@ using namespace cv;
 // ----------------------------- DEFINES ---------------------------------------
 
 #define STATE_STOP           1
-#define STATE_FEEDBACK       2
+#define STATE_ECHO           2
 #define STATE_HALFSPEED      3
 #define STATE_CHANGING       4
 
 #define REACT_NOTHING        0
 #define REACT_STOP           1
-#define REACT_FEEDBACK       2
+#define REACT_ECHO           2
 #define REACT_HALFSPEED      3
 #define REACT_LEFT           4
 #define REACT_RIGHT          5
@@ -132,7 +132,7 @@ int main ()
     printf("Thread creation failed: %d\n", CV_rc);
   */
   // ------ Variables -------------
-  int state = STATE_FEEDBACK;
+  int state = STATE_ECHO;
   int local_reaction = REACT_NOTHING;
   int stop_value = 0;
   int packet_counter = 0;
@@ -180,7 +180,7 @@ int main ()
     // Switch on the state
     switch(state)
     {
-      case STATE_FEEDBACK:
+      case STATE_ECHO:
           // _________ FEEDBACK STATE _____________
           TX = RX;
 
@@ -213,7 +213,7 @@ int main ()
           // Update state
           switch(local_reaction)
           {
-            case REACT_FEEDBACK: state = STATE_FEEDBACK;
+            case REACT_FEEDBACK: state = STATE_ECHO;
                                  break;
             case REACT_HALFSPEED: state = STATE_HALFSPEED;
                                   break;
@@ -232,7 +232,7 @@ int main ()
           // Update state
           switch(local_reaction)
           {
-            case REACT_FEEDBACK: state = STATE_FEEDBACK;
+            case REACT_FEEDBACK: state = STATE_ECHO;
                                  break;
             case REACT_STOP:     state = STATE_HALFSPEED;
                                  stop_value = TX.channel_value[6];
@@ -250,7 +250,7 @@ int main ()
     temp_FM = RX.channel_value[FLIGHT_MODE];
 
     if(temp_FM > 300 && temp_FM < 400)
-      state = STATE_FEEDBACK;
+      state = STATE_ECHO;
     if(temp_FM > 1150 && temp_FM < 1250)
       state = STATE_HALFSPEED;
     if(temp_FM > 1650 && temp_FM < 1750)
