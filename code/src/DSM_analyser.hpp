@@ -77,7 +77,7 @@ private: // Variables
     int ser_handle; // The serial connection (file descriptor)
     package package_in, package_out; // Packages for transmitting and receiving.
 
-    bool safe_mode = true; // Used when going from IDLE mode to either UNSAFE or SAFE
+    bool safe_mode = false; // Used when going from IDLE mode to either UNSAFE or SAFE
     bool fatal_error = false;
     bool modify_packets = true;
     bool packet_modified = true;
@@ -355,9 +355,9 @@ void DSM_RX_TX::RX_TX()
                                     printf("Switching to UNSAFE mode due to bad sync\n");
                                     safe_zone_syncs = 0;
                                     last_sync_dist = 0;
-                                    //safe_mode = false;
+                                    safe_mode = false;
                                     UNSAFE_counter = 0;
-                                    //DSM_STATE = DSM_S_UNSAFE;
+                                    DSM_STATE = DSM_S_UNSAFE;
                                 }
 
                                 PREAMBLE = false;
