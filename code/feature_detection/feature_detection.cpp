@@ -13,7 +13,13 @@ feature_detection::feature_detection(const char* file)
 
 void feature_detection::filter(int &lb, int &ub, int &as)
 {
-  inRange(source, Scalar(lb, lb, lb), Scalar(ub, ub, ub), filtered);
+  cvtColor(source, filtered, CV_BGR2HSV_FULL);
+
+
+  inRange(filtered, Scalar(0, 0*2.55, 30*2.55), Scalar(360, 15*2.55, 40*2.55), filtered);
+
+
+  //inRange(source, Scalar(lb, lb, lb), Scalar(ub, ub, ub), filtered);
 
   medianBlur(filtered, filtered, as);
 }
@@ -55,7 +61,7 @@ void feature_detection::draw_lines()
      pt1.y = cvRound(y0 + 1000*(a));
      pt2.x = cvRound(x0 - 1000*(-b));
      pt2.y = cvRound(y0 - 1000*(a));
-     line( source, pt1, pt2, Scalar(0,0,255), 3, CV_AA);
+     line( source, pt1, pt2, Scalar(0,0,255), 2, CV_AA);
   }
   for (size_t i = 0; i < hough_lines.size(); i++){
     cout << hough_lines[i][1] << endl;
