@@ -73,18 +73,18 @@ int main(int argc, char** argv)
 */
     FT.filter(lb_mask,ub_mask,as_median);         // Filter the image
     FT.edges(lb_canny,ub_canny,as_canny);         // Find edges with canny
-    FT.lines(rho,theta,threshold);                // Find lines through Hough
+    //FT.lines(rho,theta,threshold);                // Find lines through Hough
 
     //FT.filter_houghlines();
-    FT.identify_objects();
+    //FT.identify_objects();
 
-    FT.draw_objects();
+    //FT.draw_objects();
     //FT.draw_filtered_lines();
     //FT.draw_lines();
 
-    FT.show_source();
+    //FT.show_source();
     //FT.show_filter();
-    //FT.show_edge_map();
+    FT.show_edge_map();
 
 /*
     ofstream myfile;
