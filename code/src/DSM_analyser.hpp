@@ -355,9 +355,9 @@ void DSM_RX_TX::RX_TX()
                                     printf("Switching to UNSAFE mode due to bad sync\n");
                                     safe_zone_syncs = 0;
                                     last_sync_dist = 0;
-                                    safe_mode = false;
+                                    safe_mode = true;
                                     UNSAFE_counter = 0;
-                                    DSM_STATE = DSM_S_UNSAFE;
+                                    DSM_STATE = DSM_S_SAFE;
                                 }
 
                                 PREAMBLE = false;
@@ -411,6 +411,7 @@ void DSM_RX_TX::RX_TX()
                 serialPutchar(ser_handle,byte_in); //TX byte
 
                 sync_value = (256*old_byte_in)+byte_in;
+		//printf("Sync value: %i\n", sync_value);
                 if(sync_value == sync_value_expected ||
                     (((sync_value_expected_next - SYNC_TOLERANCE) < sync_value) &&
                        (sync_value < (sync_value_expected_next + SYNC_TOLERANCE))) &&
