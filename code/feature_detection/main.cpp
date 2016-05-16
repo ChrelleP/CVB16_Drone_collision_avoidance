@@ -76,11 +76,11 @@ int main(int argc, char** argv)
     FT.lines(rho,theta,threshold);                // Find lines through Hough
 
     //FT.filter_houghlines();
-    //FT.identify_objects();
+    FT.identify_objects();
 
-    //FT.draw_objects();
+    FT.draw_objects();
     //FT.draw_filtered_lines();
-    FT.draw_lines();
+    //FT.draw_lines();
 
     FT.show_source();
     //FT.show_filter();
