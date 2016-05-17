@@ -13,9 +13,15 @@ feature_detection::feature_detection(const char* file)
 
 void feature_detection::filter(int &lb, int &ub, int &as)
 {
+  cvtColor(source, filtered, CV_BGR2HSV_FULL);
+
+
+  inRange(filtered, Scalar(0, 0*2.55, 30*2.55), Scalar(360, 15*2.55, 40*2.55), filtered);
+
+
   //inRange(source, Scalar(lb, lb, lb), Scalar(ub, ub, ub), filtered);
 
-  medianBlur(source, filtered, as);
+  medianBlur(filtered, filtered, as);
 }
 
 void feature_detection::edges(int &lb, int &ub, int &as)

@@ -59,17 +59,17 @@ void *CV_avoid(void *arg)
    int local_reaction = REACT_NOTHING;
    int temp_reaction = REACT_NOTHING;
 
-   int LB_MASK = 0;                 // Lower bound for mask
-   int UB_MASK = 255;                 // Upper bound for mask
-   int AS_MEDIAN = 7;                  // Apperture size for median filter
+   int LB_MASK = 60;                 // Lower bound for mask
+   int UB_MASK = 100;                 // Upper bound for mask
+   int AS_MEDIAN = 9;                  // Apperture size for median filter
 
-   int LB_CANNY = 150;                // Lower bound for canny
+   int LB_CANNY = 100;                // Lower bound for canny
    int UB_CANNY = 200;                // Upper bound for canny
    int AS_CANNY = 3;                  // Apperture size for canny filter
 
-   float RHO = 1;                  // Rho used for HoughTransform
-   float THETA = 3.1416/245;         // Theta used for HoughTransform
-   int THRESHOLD = 110;                // Threshold for HoughTransform
+   float rho = 0.8;                    // Rho used for HoughTransform
+   float theta = 0.75*(CV_PI/180);         // Theta used for HoughTransform
+   int threshold = 100;              // Threshold for HoughTransform
 
    //------------------ While loop ---------------------------
    while(true)
