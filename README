@@ -1,19 +1,15 @@
 # README file
 
-This project is done by Christian Pedersen and Vincent Tofterup in relation to a 
-Bachelor project for SDU.
+This project is done by Christian Pedersen and Vincent Tofterup in relation to their 
+Bachelor thesis for SDU.
 
-The aim is to build a solution for a drone to avoid collision with beams and bars in a
+The aim for this project is to build a system for a drone to avoid collision with beams and bars in a
 greenhouse environment.
 
 
-Compiling on Raspberry Pi may need the following command to set up the virtual environment: 
-~/CVB16_Drone_collision_avoidance$ workon cv
-
-
-This branch is for the colision avoidance system in terms of computer vision. This is
+This branch is for the colision avoidance system in terms of computer vision and flight manipulation. This is
 implemented as collision risk methods in the feature_detection class. 
 
-Three modes are considered: half_speed, full_stop and feedback. 
+Three modes are considered: half_speed, frontal_block and echo. 
 
-Look in hpp and cpp files for more information.
+Look /src subfolder for more information.
