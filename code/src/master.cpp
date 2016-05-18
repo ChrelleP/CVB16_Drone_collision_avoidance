@@ -99,10 +99,10 @@ void *CV_avoid(void *arg)
      global_reaction = local_reaction;
      pthread_mutex_unlock( &reaction_mutex );
 
-     FT.draw_objects();
+     //FT.draw_objects();
      //FT.draw_filtered_lines();
      //FT.draw_lines();
-     FT.show_source();
+     //FT.show_source();
      //FT.show_filter();
      //FT.show_edge_map();
 
