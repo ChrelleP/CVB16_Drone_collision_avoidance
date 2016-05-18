@@ -17,6 +17,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "DSM_analyser.hpp"
+#include <unistd.h>
 
 using namespace std;
 using namespace cv;
@@ -79,15 +80,13 @@ void *CV_avoid(void *arg)
    //------------------ While loop ---------------------------
    while(true)
    {
-     bool success = cap.read(FT.source_mat);           // read a new frame from video
+     bool success = cap.read(FT.source);           // read a new frame from video
 
      if (!success)                                 //if not success, break loop
      {
        cout << "Could not read frame" << endl;
        break;
      }
-
-     FT.source = FT.source_mat.getUMat( ACCESS_READ );
 
      printf("width: %i \t height: %i \n", FT.source.cols, FT.source.rows);
 
@@ -175,6 +174,8 @@ int main ()
   roll_default = RX.channel_value[ROLL];
 
   digitalWrite(0, HIGH);
+  sleep(5);
+  digitalWrite(0, LOW);
 
   // ------- Main loop -----------
   while(!abort)
@@ -194,6 +195,9 @@ int main ()
       case STATE_ECHO:
           // _________ FEEDBACK STATE _____________
           TX = RX;
+
+          //LED
+          digitalWrite(0, LOW);
 
           // Update state
           switch(local_reaction)
@@ -221,6 +225,9 @@ int main ()
           TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) / 2 ) + roll_default;
           TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) / 2 ) + yaw_default;
 
+          // LED
+          digitalWrite(0, HIGH);
+
           // Update state
           switch(local_reaction)
           {
@@ -239,6 +246,12 @@ int main ()
           TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
           TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) / 2 ) + roll_default;
           TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) / 2 ) + yaw_default;
+
+          // LED
+          if(digitalRead(0) == HIGH)
+            digitalWrite(0, LOW);
+          else
+            digitalWrite(0, HIGH);
 
           // Update state
           switch(local_reaction)
