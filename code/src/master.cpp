@@ -67,9 +67,9 @@ void *CV_avoid(void *arg)
    int UB_CANNY = 200;                // Upper bound for canny
    int AS_CANNY = 3;                  // Apperture size for canny filter
 
-   float rho = 0.8;                    // Rho used for HoughTransform
-   float theta = 0.75*(CV_PI/180);         // Theta used for HoughTransform
-   int threshold = 100;              // Threshold for HoughTransform
+   float RHO = 0.8;                    // Rho used for HoughTransform
+   float THETA = 0.75*(CV_PI/180);         // Theta used for HoughTransform
+   int THRESHOLD = 100;              // Threshold for HoughTransform
 
    //------------------ While loop ---------------------------
    while(true)
@@ -100,13 +100,13 @@ void *CV_avoid(void *arg)
      pthread_mutex_unlock( &reaction_mutex );
 
      FT.draw_objects();
-     FT.draw_filtered_lines();
-     FT.draw_lines();
+     //FT.draw_filtered_lines();
+     //FT.draw_lines();
      FT.show_source();
      //FT.show_filter();
-     FT.show_edge_map();
+     //FT.show_edge_map();
 
-     if(waitKey(33) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
+     if(waitKey(10) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
      {
        cout << "esc key is pressed by user" << endl;
        break;
@@ -121,16 +121,16 @@ int main ()
   // -------- Startup ---------
   DSM_RX_TX DSM_UART;
 
-  wiringPiSetup();
-  pinMode(0, OUTPUT);
+  //wiringPiSetup();
+  //pinMode(0, OUTPUT);
 
-  /*pthread_t CV_thread;
+  pthread_t CV_thread;
   int CV_rc;
 
   CV_rc = pthread_create( &CV_thread, NULL, CV_avoid, NULL);
   if( CV_rc )
     printf("Thread creation failed: %d\n", CV_rc);
-  */
+
   // ------ Variables -------------
   int state = STATE_ECHO;
   int local_reaction = REACT_NOTHING;
