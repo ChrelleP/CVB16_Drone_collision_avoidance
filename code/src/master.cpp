@@ -54,7 +54,8 @@ void *CV_avoid(void *arg)
    //------------- Create objects and variables -------------
    feature_detection FT;   // Feature Detection object - used for CV methods
    VideoCapture cap(0);       // Video Capture object - used to get frames from video
-   printf( cap.get(CV_CAP_PROP_FPS) );
+   double FPS = cap.get(CV_CAP_PROP_FPS);
+   printf("FPS: %lf\n", FPS);
 
    //------------- Variables --------------------------------
    int local_reaction = REACT_NOTHING;
