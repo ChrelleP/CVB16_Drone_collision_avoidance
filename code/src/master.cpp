@@ -55,7 +55,10 @@ void *CV_avoid(void *arg)
    feature_detection FT;   // Feature Detection object - used for CV methods
    VideoCapture cap(0);       // Video Capture object - used to get frames from video
    double FPS = cap.get(CV_CAP_PROP_FPS);
-   printf("FPS: %lf\n", FPS);
+   double WIDTH = cap.get(CV_CAP_PROP_FRAME_WIDTH);
+   double HEIGHT = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+
+   printf("FPS: %lf \t WIDTH: %lf \t HEIGHT: %lf \n", FPS, WIDTH, HEIGHT);
 
    //------------- Variables --------------------------------
    int local_reaction = REACT_NOTHING;
@@ -84,7 +87,7 @@ void *CV_avoid(void *arg)
        break;
      }
 
-     printf("width: %i", FT.source.cols);
+     printf("width: %i \t height: %i \n", FT.source.cols, FT.source.rows);
 
      //FT.filter(LB_MASK, UB_MASK, AS_MEDIAN);         // Filter the image
      //FT.edges(LB_CANNY, UB_CANNY, AS_CANNY);         // Find edges with canny
