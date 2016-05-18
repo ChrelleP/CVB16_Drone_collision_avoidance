@@ -84,6 +84,8 @@ void *CV_avoid(void *arg)
        break;
      }
 
+     printf("width: %i", FT.source.width());
+
      //FT.filter(LB_MASK, UB_MASK, AS_MEDIAN);         // Filter the image
      //FT.edges(LB_CANNY, UB_CANNY, AS_CANNY);         // Find edges with canny
      //FT.lines(RHO, THETA, THRESHOLD);                // Find lines through Hough
