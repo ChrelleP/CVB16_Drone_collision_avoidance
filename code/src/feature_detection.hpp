@@ -37,7 +37,8 @@ class feature_detection
     feature_detection();
 	  feature_detection(const char* file);
 
-    Mat source;
+    UMat source;
+    Mat source_mat;
 
     void filter(int &lb, int &ub, int &as);
     void edges(int &lb, int &ub, int &as);

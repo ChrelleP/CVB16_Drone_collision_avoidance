@@ -79,7 +79,7 @@ void *CV_avoid(void *arg)
    //------------------ While loop ---------------------------
    while(true)
    {
-     bool success = cap.read(FT.source);           // read a new frame from video
+     bool success = cap.read(FT.source_mat);           // read a new frame from video
 
      if (!success)                                 //if not success, break loop
      {
@@ -87,14 +87,16 @@ void *CV_avoid(void *arg)
        break;
      }
 
+     FT.source = FT.source_mat.getUMat( ACCESS_READ );
+
      printf("width: %i \t height: %i \n", FT.source.cols, FT.source.rows);
 
-     //FT.filter(LB_MASK, UB_MASK, AS_MEDIAN);         // Filter the image
-     //FT.edges(LB_CANNY, UB_CANNY, AS_CANNY);         // Find edges with canny
-     //FT.lines(RHO, THETA, THRESHOLD);                // Find lines through Hough
+     FT.filter(LB_MASK, UB_MASK, AS_MEDIAN);         // Filter the image
+     FT.edges(LB_CANNY, UB_CANNY, AS_CANNY);         // Find edges with canny
+     FT.lines(RHO, THETA, THRESHOLD);                // Find lines through Hough
 
-     //FT.filter_houghlines();
-     //FT.identify_objects();
+     FT.filter_houghlines();
+     FT.identify_objects();
 
      pthread_mutex_lock( &reaction_mutex );
      temp_reaction = global_reaction;
