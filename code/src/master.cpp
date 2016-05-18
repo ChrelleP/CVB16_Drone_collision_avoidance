@@ -108,7 +108,7 @@ void *CV_avoid(void *arg)
 
      printf("New frame\n");
 
-     if(waitKey(10) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
+     if(waitKey(0) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
      {
        cout << "esc key is pressed by user" << endl;
        break;
