@@ -22,7 +22,7 @@ int main(int argc, char** argv)
   //--------------------------------------------------------
 
   //------------- Create objects and variables -------------
-  feature_detection FT(filename);   // Feature Detection object - used for CV methods
+  feature_detection FT(0);   // Feature Detection object - used for CV methods
   //VideoCapture cap(filename);       // Video Capture object - used to get frames from video
 
   int lb_mask = 60;                 // Lower bound for mask

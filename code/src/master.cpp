@@ -43,6 +43,8 @@ using namespace cv;
 #define FLIGHT_MODE          4      // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
 #define PANIC_BIND           5
 
+#define LED		     21
+
 // --------------------------- GLOBAL VARIABLES --------------------------------
 
 volatile int global_reaction;
@@ -55,11 +57,11 @@ void *CV_avoid(void *arg)
    //------------- Create objects and variables -------------
    feature_detection FT;   // Feature Detection object - used for CV methods
    VideoCapture cap(0);       // Video Capture object - used to get frames from video
-   double FPS = cap.get(CV_CAP_PROP_FPS);
-   double WIDTH = cap.get(CV_CAP_PROP_FRAME_WIDTH);
-   double HEIGHT = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+   //double FPS = cap.get(CV_CAP_PROP_FPS);
+   //double WIDTH = cap.get(CV_CAP_PROP_FRAME_WIDTH);
+   //double HEIGHT = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
 
-   printf("FPS: %lf \t WIDTH: %lf \t HEIGHT: %lf \n", FPS, WIDTH, HEIGHT);
+   //printf("FPS: %lf \t WIDTH: %lf \t HEIGHT: %lf \n", FPS, WIDTH, HEIGHT);
 
    //------------- Variables --------------------------------
    int local_reaction = REACT_NOTHING;
@@ -88,7 +90,7 @@ void *CV_avoid(void *arg)
        break;
      }
 
-     printf("width: %i \t height: %i \n", FT.source.cols, FT.source.rows);
+     //printf("width: %i \t height: %i \n", FT.source.cols, FT.source.rows);
 
      FT.filter(LB_MASK, UB_MASK, AS_MEDIAN);         // Filter the image
      FT.edges(LB_CANNY, UB_CANNY, AS_CANNY);         // Find edges with canny
@@ -101,20 +103,20 @@ void *CV_avoid(void *arg)
      temp_reaction = global_reaction;
      pthread_mutex_unlock( &reaction_mutex );
 
-     //local_reaction = FT.collision_risk(temp_reaction);
+     local_reaction = FT.collision_risk(temp_reaction);
 
      pthread_mutex_lock( &reaction_mutex );
      global_reaction = local_reaction;
      pthread_mutex_unlock( &reaction_mutex );
 
-     //FT.draw_objects();
+     FT.draw_objects();
      //FT.draw_filtered_lines();
      //FT.draw_lines();
-     //FT.show_source();
+     FT.show_source();
      //FT.show_filter();
      //FT.show_edge_map();
 
-     printf("New frame\n");
+     //printf("New frame\n");
 
      if(waitKey(1) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
      {
@@ -131,8 +133,8 @@ int main ()
   // -------- Startup ---------
   DSM_RX_TX DSM_UART;
 
-  //wiringPiSetup();
-  //pinMode(0, OUTPUT);
+  wiringPiSetup();
+  pinMode(LED, OUTPUT);
 
   pthread_t CV_thread;
   int CV_rc;
@@ -173,9 +175,7 @@ int main ()
   pitch_default = RX.channel_value[PITCH];
   roll_default = RX.channel_value[ROLL];
 
-  digitalWrite(0, HIGH);
-  sleep(5);
-  digitalWrite(0, LOW);
+  digitalWrite(LED, HIGH);
 
   // ------- Main loop -----------
   while(!abort)
@@ -197,7 +197,7 @@ int main ()
           TX = RX;
 
           //LED
-          digitalWrite(0, LOW);
+          digitalWrite(LED, HIGH);
 
           // Update state
           switch(local_reaction)
@@ -226,7 +226,7 @@ int main ()
           TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) / 2 ) + yaw_default;
 
           // LED
-          digitalWrite(0, HIGH);
+          digitalWrite(LED, LOW);
 
           // Update state
           switch(local_reaction)
@@ -248,10 +248,10 @@ int main ()
           TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) / 2 ) + yaw_default;
 
           // LED
-          if(digitalRead(0) == HIGH)
-            digitalWrite(0, LOW);
+          if(digitalRead(LED) == HIGH)
+            digitalWrite(LED, LOW);
           else
-            digitalWrite(0, HIGH);
+            digitalWrite(LED, HIGH);
 
           // Update state
           switch(local_reaction)
@@ -278,10 +278,10 @@ int main ()
     if(temp_FM > 1150 && temp_FM < 1250)
       state = STATE_HALFSPEED;
     if(temp_FM > 1650 && temp_FM < 1750)
-      state = STATE_STOP;
+      state = state;
 
     // Printing information
-    system("clear"); // Clear terminal
+    /*system("clear"); // Clear terminal
 
     printf("---------- PACKETS ----------\n");
     printf("channel 0 | TX: %d \t RX: %d \n", TX.channel_value[0], RX.channel_value[0]);
@@ -297,7 +297,7 @@ int main ()
 
     printf("\n ------ Default values -------\n");
     printf(" Pitch: %d \t Roll: %d \t Yaw: %d \t Throttle: %d \n", pitch_default, roll_default, yaw_default, throttle_default);
-
+    */
     if(RX.channel_value[PANIC_BIND] > 1000) // Stop at bind/panic button
       abort = true;
   }
