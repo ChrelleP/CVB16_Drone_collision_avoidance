@@ -26,13 +26,13 @@ using namespace cv;
 
 #define STATE_STOP           1
 #define STATE_ECHO           2
-#define STATE_HALFSPEED      3
+#define STATE_REDUCED        3
 #define STATE_CHANGING       4
 
 #define REACT_NOTHING        0
 #define REACT_STOP           1
 #define REACT_ECHO           2
-#define REACT_HALFSPEED      3
+#define REACT_REDUCED        3
 #define REACT_LEFT           4
 #define REACT_RIGHT          5
 
@@ -43,11 +43,13 @@ using namespace cv;
 #define FLIGHT_MODE          4      // Mode 0: 1704 | Mode 1: 1192 | Mode 2: 340
 #define PANIC_BIND           5
 
-#define LED		     21
+#define LED		               21
+#define STOP_DIST            100
+#define REDUCED_DIST         400
 
 // --------------------------- GLOBAL VARIABLES --------------------------------
 
-volatile int global_reaction;
+volatile vector<float> global_reaction;
 volatile int global_abort = false;
 
 pthread_mutex_t thread_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -77,8 +79,12 @@ void *CV_avoid(void *arg)
    bool CV_abort = false;
 
    //------------- Variables --------------------------------
-   int local_reaction = REACT_NOTHING;
-   int temp_reaction = REACT_NOTHING;
+   vector<float> local_reaction;
+   vector<float> temp_reaction;
+   local_reaction.push_back(10000);
+   temp_reaction.push_back(10000);
+   local_reaction.push_back(REACT_NOTHING);
+   temp_reaction.push_back(REACT_NOTHING);
 
    int LB_MASK = 60;                 // Lower bound for mask
    int UB_MASK = 100;                 // Upper bound for mask
@@ -150,6 +156,14 @@ int main ()
   // -------- Startup ---------
   DSM_RX_TX DSM_UART;
 
+  ostream flight_data;
+  flight_data.open("/home/pi/CVB16/Data/flight_data.dat")
+
+  // Syntax for data
+  flight_data << "Distance;";
+  flight_data << "RX_Throttle;RX_Pitch;RX_Roll;RX_YAW;RX_Flight_Mode;";
+  flight_data << "TX_Throttle;TX_Pitch;TX_Roll;TX_Yaw;TX_Flight_Mode" << endl;
+
   wiringPiSetup();
   pinMode(LED, OUTPUT);
 
@@ -162,7 +176,9 @@ int main ()
 
   // ------ Variables -------------
   int state = STATE_ECHO;
-  int local_reaction = REACT_NOTHING;
+  vector<float> local_reaction;
+  local_reaction.push_back(10000);
+  local_reaction.push_back(REACT_NOTHING);
   int stop_value = 0;
   int packet_counter = 0;
   int temp_FM;
@@ -217,12 +233,12 @@ int main ()
           digitalWrite(LED, HIGH);
 
           // Update state
-          switch(local_reaction)
+          switch(local_reaction[1])
           {
             case REACT_STOP: state = STATE_STOP;
                              stop_value = TX.channel_value[6];
                              break;
-            case REACT_HALFSPEED: state = STATE_HALFSPEED;
+            case REACT_REDUCED: state = STATE_REDUCED;
                                   break;
             default:         break; // No state change
           }
@@ -246,23 +262,29 @@ int main ()
           digitalWrite(LED, LOW);
 
           // Update state
-          switch(local_reaction)
+          switch(local_reaction[1])
           {
             case REACT_ECHO: state = STATE_ECHO;
                                  break;
-            case REACT_HALFSPEED: state = STATE_HALFSPEED;
+            case REACT_REDUCED: state = STATE_REDUCED;
                                   break;
             default:         break;
           }
           break;
-       case STATE_HALFSPEED:
+       case STATE_REDUCED:
           // _________ HALFSPEED STATE ______________
           // Use half the speed
           TX = RX;
 
-          TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) / 2 ) + pitch_default;
-          TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) / 2 ) + roll_default;
-          TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) / 2 ) + yaw_default;
+
+          TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) * ( (1/600) * (distance - DEFUALT_STOP_DIST) + 0.5 ) ) + pitch_default;
+          TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) * ( (1/600) * (distance - DEFUALT_STOP_DIST) + 0.5 ) ) + roll_default;
+          TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) * ( (1/600) * (distance - DEFUALT_STOP_DIST) + 0.5 ) ) + yaw_default;
+
+          if(RX.channel_value[PITCH] < pitch_default)
+          {
+            TX.channel_value[PITCH] = ( (RX.channel_value[PITCH] - pitch_default) * (1/300)*(distance - DEFUALT_STOP_DIST) ) + pitch_default)
+          }
 
           // LED
           if(digitalRead(LED) == HIGH)
@@ -271,11 +293,11 @@ int main ()
             digitalWrite(LED, HIGH);
 
           // Update state
-          switch(local_reaction)
+          switch(local_reaction[1])
           {
             case REACT_ECHO: state = STATE_ECHO;
                                  break;
-            case REACT_STOP:     state = STATE_HALFSPEED;
+            case REACT_STOP:     state = STATE_REDUCED;
                                  stop_value = TX.channel_value[6];
                                  break;
             default:         break;
@@ -293,9 +315,14 @@ int main ()
     if(temp_FM > 300 && temp_FM < 400)
       state = STATE_ECHO;
     if(temp_FM > 1150 && temp_FM < 1250)
-      state = STATE_HALFSPEED;
+      state = STATE_REDUCED;
     if(temp_FM > 1650 && temp_FM < 1750)
       state = state;
+
+    // Write data to file
+    flight_data << local_reaction[1] << endl;
+    flight_data << RX.channel_value[THROTTLE] << ";" << RX.channel_value[PITCH] << ";" << RX.channel_value[ROLL] << ";" << RX.channel_value[YAW] << ";";
+    flight_data << TX.channel_value[THROTTLE] << ";" << TX.channel_value[PITCH] << ";" << TX.channel_value[ROLL] << ";" << TX.channel_value[YAW] << endl;
 
     // Printing information
     /*system("clear"); // Clear terminal

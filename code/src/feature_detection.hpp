@@ -24,7 +24,7 @@
 #define REACT_NOTHING        0
 #define REACT_STOP           1
 #define REACT_ECHO           2
-#define REACT_HALFSPEED      3
+#define REACT_REDUCED        3
 #define REACT_LEFT           4
 #define REACT_RIGHT          5
 
@@ -57,7 +57,7 @@ class feature_detection
 
     void identify_objects();
 
-    int collision_risk(int global_react);
+    vector<float> collision_risk(int global_react);
 
   	~feature_detection();
 
