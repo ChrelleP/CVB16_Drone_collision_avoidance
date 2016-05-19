@@ -59,11 +59,14 @@ void *CV_avoid(void *arg)
    feature_detection FT;   // Feature Detection object - used for CV methods
    VideoCapture cap(0);       // Video Capture object - used to get frames from video
    VideoWriter fly_vid;
+
+   int frame_width = cap.get(CV_CAP_PROP_FRAME_WIDTH);
+   int frame_height = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+
    fly_vid.open( "/home/pi/CVB16/Data/last_flight.avi",
-               cap.get(CV_CAP_PROP_FOURCC),
-               cap.get(CV_CAP_PROP_FPS),
-               Size(cap.get(CV_CAP_PROP_FRAME_WIDTH),
-               cap.get(CV_CAP_PROP_FRAME_HEIGHT)) );
+               CV_FOURCC('M','J','P','G'),
+               10,
+               Size(frame_width, frame_height) );
 
    //double FPS = cap.get(CV_CAP_PROP_FPS);
    //double WIDTH = cap.get(CV_CAP_PROP_FRAME_WIDTH);
