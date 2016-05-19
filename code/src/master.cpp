@@ -49,7 +49,8 @@ using namespace cv;
 
 // --------------------------- GLOBAL VARIABLES --------------------------------
 
-volatile vector<float> global_reaction;
+volatile int global_reaction = REACT_NOTHING;
+volatile float global_dist = 10000;
 volatile int global_abort = false;
 
 pthread_mutex_t thread_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -79,12 +80,10 @@ void *CV_avoid(void *arg)
    bool CV_abort = false;
 
    //------------- Variables --------------------------------
-   vector<float> local_reaction;
-   vector<float> temp_reaction;
-   local_reaction.push_back(10000);
-   temp_reaction.push_back(10000);
-   local_reaction.push_back(REACT_NOTHING);
-   temp_reaction.push_back(REACT_NOTHING);
+   int local_reaction = REACT_NOTHING;
+   float local_dist = 10000;
+   int temp_reaction = REACT_NOTHING;
+   float temp_dis = 10000;
 
    int LB_MASK = 60;                 // Lower bound for mask
    int UB_MASK = 100;                 // Upper bound for mask
@@ -122,10 +121,12 @@ void *CV_avoid(void *arg)
      temp_reaction = global_reaction;
      pthread_mutex_unlock( &thread_mutex );
 
+     local_dist = FT.calc_distance();
      local_reaction = FT.collision_risk(temp_reaction);
 
      pthread_mutex_lock( &thread_mutex );
      global_reaction = local_reaction;
+     global_dist = local_dist;
      CV_abort = global_abort;
      pthread_mutex_unlock( &thread_mutex );
 
@@ -156,11 +157,11 @@ int main ()
   // -------- Startup ---------
   DSM_RX_TX DSM_UART;
 
-  ostream flight_data;
-  flight_data.open("/home/pi/CVB16/Data/flight_data.dat")
+  fstream flight_data;
+  flight_data.open("/home/pi/CVB16/Data/flight_data.dat");
 
   // Syntax for data
-  flight_data << "Distance;";
+  flight_data << "Distance;Reaction;";
   flight_data << "RX_Throttle;RX_Pitch;RX_Roll;RX_YAW;RX_Flight_Mode;";
   flight_data << "TX_Throttle;TX_Pitch;TX_Roll;TX_Yaw;TX_Flight_Mode" << endl;
 
@@ -176,9 +177,8 @@ int main ()
 
   // ------ Variables -------------
   int state = STATE_ECHO;
-  vector<float> local_reaction;
-  local_reaction.push_back(10000);
-  local_reaction.push_back(REACT_NOTHING);
+  int local_reaction = REACT_NOTHING;
+  float local_dist = 10000;
   int stop_value = 0;
   int packet_counter = 0;
   int temp_FM;
@@ -220,6 +220,7 @@ int main ()
     // Retrieve reaction
     pthread_mutex_lock( &thread_mutex );
     local_reaction = global_reaction;
+    local_dist = global_dist;
     pthread_mutex_unlock( &thread_mutex );
 
     // Switch on the state
@@ -233,7 +234,7 @@ int main ()
           digitalWrite(LED, HIGH);
 
           // Update state
-          switch(local_reaction[1])
+          switch(local_reaction)
           {
             case REACT_STOP: state = STATE_STOP;
                              stop_value = TX.channel_value[6];
@@ -262,7 +263,7 @@ int main ()
           digitalWrite(LED, LOW);
 
           // Update state
-          switch(local_reaction[1])
+          switch(local_reaction)
           {
             case REACT_ECHO: state = STATE_ECHO;
                                  break;
@@ -276,14 +277,13 @@ int main ()
           // Use half the speed
           TX = RX;
 
-
-          TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) * ( (1/600) * (distance - DEFUALT_STOP_DIST) + 0.5 ) ) + pitch_default;
-          TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) * ( (1/600) * (distance - DEFUALT_STOP_DIST) + 0.5 ) ) + roll_default;
-          TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) * ( (1/600) * (distance - DEFUALT_STOP_DIST) + 0.5 ) ) + yaw_default;
+          TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) * ( (1/600) * (local_dist - STOP_DIST) + 0.5 ) ) + pitch_default;
+          TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) * ( (1/600) * (local_dist - STOP_DIST) + 0.5 ) ) + roll_default;
+          TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) * ( (1/600) * (local_dist - STOP_DIST) + 0.5 ) ) + yaw_default;
 
           if(RX.channel_value[PITCH] < pitch_default)
           {
-            TX.channel_value[PITCH] = ( (RX.channel_value[PITCH] - pitch_default) * (1/300)*(distance - DEFUALT_STOP_DIST) ) + pitch_default)
+            TX.channel_value[PITCH] = ( (RX.channel_value[PITCH] - pitch_default) * (1/300)*(local_dist - STOP_DIST) + pitch_default);
           }
 
           // LED
@@ -293,7 +293,7 @@ int main ()
             digitalWrite(LED, HIGH);
 
           // Update state
-          switch(local_reaction[1])
+          switch(local_reaction)
           {
             case REACT_ECHO: state = STATE_ECHO;
                                  break;
@@ -320,7 +320,7 @@ int main ()
       state = state;
 
     // Write data to file
-    flight_data << local_reaction[1] << endl;
+    flight_data << local_dist << ";" << local_reaction << endl;
     flight_data << RX.channel_value[THROTTLE] << ";" << RX.channel_value[PITCH] << ";" << RX.channel_value[ROLL] << ";" << RX.channel_value[YAW] << ";";
     flight_data << TX.channel_value[THROTTLE] << ";" << TX.channel_value[PITCH] << ";" << TX.channel_value[ROLL] << ";" << TX.channel_value[YAW] << endl;
 
@@ -350,7 +350,7 @@ int main ()
   global_abort = true;
   pthread_mutex_unlock( &thread_mutex );
 
-  flight_data.release();
+  flight_data.close();
 
   DSM_UART.DSM_analyse(true, RX);
   //pthread_join( CV_thread, NULL);

@@ -20,7 +20,7 @@ void feature_detection::filter(int &lb, int &ub, int &as)
 
   vector<Mat> channels;
 
-  split(frame, channels);
+  split(source, channels);
   add(channels[0], channels[1], channels[1]);
   subtract(channels[2], channels[1], channels[2]);
   threshold(channels[2], filtered, 50, 255, CV_THRESH_BINARY);
@@ -303,8 +303,7 @@ float feature_detection::calc_distance()
   float test_distance = 500; // mm, experimentally defined
 
 
-  //float focal_length = (test_width * test_distance) / bar_width;
-  float focal_length =
+  float focal_length = (test_width * test_distance) / bar_width;
 
   // When the focal length is calculated, the distance to new objects can be determined.
   // D = (W x F) / P
@@ -328,25 +327,25 @@ float feature_detection::calc_distance()
   return shortest_distance;
 }
 
-vector<float> feature_detection::collision_risk(int global_react)
+int feature_detection::collision_risk(int global_react)
 {
   float temp_dist = calc_distance();
-  vector<float> collisionRisk;
+
 
   //printf("temp distance: %f\n", temp_dist);
 
   if(temp_dist <= 100)
-    collisionRisk.push_back(temp_dist);
-    collisionRisk.push_back(REACT_STOP);
-    return collisionRisk;
+  {
+    return REACT_STOP;
+  }
   else if(temp_dist <= 400)
-    collisionRisk.push_back(temp_dist);
-    collisionRisk.push_back(REACT_REDUCED);
-    return collisionRisk;
+  {
+    return REACT_REDUCED;
+  }
   else
-    collisionRisk.push_back(temp_dist);
-    collisionRisk.push_back(REACT_ECHO);
-    return collisionRisk;
+  {
+    return REACT_ECHO;
+  }
 }
 feature_detection::~feature_detection()
 {
