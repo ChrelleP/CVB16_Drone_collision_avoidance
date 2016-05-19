@@ -17,15 +17,20 @@ void feature_detection::filter(int &lb, int &ub, int &as)
 
 
   //inRange(filtered, Scalar(0, 0*2.55, 30*2.55), Scalar(360, 15*2.55, 40*2.55), filtered);
-  
 
+  vector<Mat> channels;
+
+  split(frame, channels);
+  add(channels[0], channels[1], channels[1]);
+  subtract(channels[2], channels[1], channels[2]);
+  threshold(channels[2], filtered, 50, 255, CV_THRESH_BINARY);
 
   //Mat filtered1, filtered2;
   // Test for RED color
   //inRange(filtered, Scalar(0,70,50), Scalar(50, 255, 255), filtered1);
   //inRange(filtered, Scalar(300, 70, 50),Scalar(360, 255, 255), filtered2);
 
-  inRange(source, Scalar(0, 0, 50), Scalar(5, 5, 255), filtered);
+  //inRange(source, Scalar(0, 0, 50), Scalar(5, 5, 255), filtered);
 
 
   //filtered = filtered1 | filtered2;

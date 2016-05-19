@@ -350,6 +350,8 @@ int main ()
   global_abort = true;
   pthread_mutex_unlock( &thread_mutex );
 
+  flight_data.release();
+
   DSM_UART.DSM_analyse(true, RX);
   //pthread_join( CV_thread, NULL);
 
