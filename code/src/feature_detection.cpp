@@ -290,7 +290,9 @@ float feature_detection::calc_distance()
   float test_distance = 500; // mm, experimentally defined
 
 
-  float focal_length = (test_width * test_distance) / bar_width;
+  //float focal_length = (test_width * test_distance) / bar_width;
+  float focal_length =
+
   // When the focal length is calculated, the distance to new objects can be determined.
   // D = (W x F) / P
   if(bars.size() == 0)
@@ -313,18 +315,25 @@ float feature_detection::calc_distance()
   return shortest_distance;
 }
 
-int feature_detection::collision_risk(int global_react)
+vector<float> feature_detection::collision_risk(int global_react)
 {
   float temp_dist = calc_distance();
+  vector<float> collisionRisk;
 
   //printf("temp distance: %f\n", temp_dist);
 
-  if(temp_dist <= 600)
-    return REACT_STOP;
-  else if(temp_dist <= 700)
-    return REACT_HALFSPEED;
+  if(temp_dist <= 100)
+    collisionRisk.push_back(temp_dist);
+    collisionRisk.push_back(REACT_STOP);
+    return collisionRisk;
+  else if(temp_dist <= 400)
+    collisionRisk.push_back(temp_dist);
+    collisionRisk.push_back(REACT_REDUCED);
+    return collisionRisk;
   else
-    return REACT_ECHO;
+    collisionRisk.push_back(temp_dist);
+    collisionRisk.push_back(REACT_ECHO);
+    return collisionRisk;
 }
 feature_detection::~feature_detection()
 {
