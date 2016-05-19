@@ -123,11 +123,11 @@ void *CV_avoid(void *arg)
      CV_abort = global_abort;
      pthread_mutex_unlock( &thread_mutex );
 
-     FT.draw_objects();
+     //FT.draw_objects();
      //FT.draw_filtered_lines();
      //FT.draw_lines();
      FT.show_source();
-     //FT.show_filter();
+     FT.show_filter();
      //FT.show_edge_map();
 
      fly_vid.write(FT.source);

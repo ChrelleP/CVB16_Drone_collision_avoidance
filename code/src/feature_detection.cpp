@@ -13,14 +13,22 @@ feature_detection::feature_detection(const char* file)
 
 void feature_detection::filter(int &lb, int &ub, int &as)
 {
-  cvtColor(source, filtered, CV_BGR2HSV_FULL);
+  //cvtColor(source, filtered, CV_BGR2HSV_FULL);
 
 
-  inRange(filtered, Scalar(0, 0*2.55, 30*2.55), Scalar(360, 15*2.55, 40*2.55), filtered);
+  //inRange(filtered, Scalar(0, 0*2.55, 30*2.55), Scalar(360, 15*2.55, 40*2.55), filtered);
+  
 
 
-  //inRange(source, Scalar(lb, lb, lb), Scalar(ub, ub, ub), filtered);
+  //Mat filtered1, filtered2;
+  // Test for RED color
+  //inRange(filtered, Scalar(0,70,50), Scalar(50, 255, 255), filtered1);
+  //inRange(filtered, Scalar(300, 70, 50),Scalar(360, 255, 255), filtered2);
 
+  inRange(source, Scalar(0, 0, 50), Scalar(5, 5, 255), filtered);
+
+
+  //filtered = filtered1 | filtered2;
   medianBlur(filtered, filtered, as);
 }
 
