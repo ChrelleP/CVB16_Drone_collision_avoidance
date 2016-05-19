@@ -48,8 +48,9 @@ using namespace cv;
 // --------------------------- GLOBAL VARIABLES --------------------------------
 
 volatile int global_reaction;
+volatile int global_abort = false;
 
-pthread_mutex_t reaction_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t thread_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // --------------------------- FUNCTIONS ---------------------------------------
 void *CV_avoid(void *arg)
@@ -57,11 +58,20 @@ void *CV_avoid(void *arg)
    //------------- Create objects and variables -------------
    feature_detection FT;   // Feature Detection object - used for CV methods
    VideoCapture cap(0);       // Video Capture object - used to get frames from video
+   VideoWriter fly_vid;
+   fly_vid.open( "/home/pi/CVB16/CVB16_Drone_collision_avoidance/code/src/last_flight.avi",
+               cap.get(CV_CAP_PROP_FOURCC),
+               cap.get(CV_CAP_PROP_FPS),
+               Size(cap.get(CV_CAP_PROP_FRAME_WIDTH),
+               cap.get(CV_CAP_PROP_FRAME_HEIGHT)) );
+
    //double FPS = cap.get(CV_CAP_PROP_FPS);
    //double WIDTH = cap.get(CV_CAP_PROP_FRAME_WIDTH);
    //double HEIGHT = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
 
    //printf("FPS: %lf \t WIDTH: %lf \t HEIGHT: %lf \n", FPS, WIDTH, HEIGHT);
+
+   bool CV_abort = false;
 
    //------------- Variables --------------------------------
    int local_reaction = REACT_NOTHING;
@@ -80,7 +90,7 @@ void *CV_avoid(void *arg)
    int THRESHOLD = 100;              // Threshold for HoughTransform
 
    //------------------ While loop ---------------------------
-   while(true)
+   while(!CV_abort)
    {
      bool success = cap.read(FT.source);           // read a new frame from video
 
@@ -99,15 +109,16 @@ void *CV_avoid(void *arg)
      FT.filter_houghlines();
      FT.identify_objects();
 
-     pthread_mutex_lock( &reaction_mutex );
+     pthread_mutex_lock( &thread_mutex );
      temp_reaction = global_reaction;
-     pthread_mutex_unlock( &reaction_mutex );
+     pthread_mutex_unlock( &thread_mutex );
 
      local_reaction = FT.collision_risk(temp_reaction);
 
-     pthread_mutex_lock( &reaction_mutex );
+     pthread_mutex_lock( &thread_mutex );
      global_reaction = local_reaction;
-     pthread_mutex_unlock( &reaction_mutex );
+     CV_abort = global_abort;
+     pthread_mutex_unlock( &thread_mutex );
 
      FT.draw_objects();
      //FT.draw_filtered_lines();
@@ -116,7 +127,7 @@ void *CV_avoid(void *arg)
      //FT.show_filter();
      //FT.show_edge_map();
 
-     //printf("New frame\n");
+     fly_vid.write(FT.source);
 
      if(waitKey(1) == 27)                         // Wait 50 ms untill next frame, exit if escape is pressed
      {
@@ -124,6 +135,9 @@ void *CV_avoid(void *arg)
        break;
      }
    }
+
+   cap.release();
+   fly_vid.release();
 
    pthread_exit(NULL);
 }
@@ -185,9 +199,9 @@ int main ()
 
     // --------- State machine ----------
     // Retrieve reaction
-    pthread_mutex_lock( &reaction_mutex );
+    pthread_mutex_lock( &thread_mutex );
     local_reaction = global_reaction;
-    pthread_mutex_unlock( &reaction_mutex );
+    pthread_mutex_unlock( &thread_mutex );
 
     // Switch on the state
     switch(state)
@@ -301,6 +315,10 @@ int main ()
     if(RX.channel_value[PANIC_BIND] > 1000) // Stop at bind/panic button
       abort = true;
   }
+
+  pthread_mutex_lock( &thread_mutex );
+  global_abort = true;
+  pthread_mutex_unlock( &thread_mutex );
 
   DSM_UART.DSM_analyse(true, RX);
   //pthread_join( CV_thread, NULL);
