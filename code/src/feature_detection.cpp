@@ -13,17 +13,17 @@ feature_detection::feature_detection(const char* file)
 
 void feature_detection::filter(int &lb, int &ub, int &as)
 {
-  //cvtColor(source, filtered, CV_BGR2HSV_FULL);
+  cvtColor(source, filtered, CV_BGR2HSV_FULL);
 
 
-  //inRange(filtered, Scalar(0, 0*2.55, 30*2.55), Scalar(360, 15*2.55, 40*2.55), filtered);
+  inRange(filtered, Scalar(0, 0*2.55, 30*2.55), Scalar(360, 15*2.55, 40*2.55), filtered);
 
-  vector<Mat> channels;
+  //vector<Mat> channels;
 
-  split(source, channels);
-  add(channels[0], channels[1], channels[1]);
-  subtract(channels[2], channels[1], channels[2]);
-  threshold(channels[2], filtered, 50, 255, CV_THRESH_BINARY);
+  //split(source, channels);
+  //add(channels[0], channels[1], channels[1]);
+  //subtract(channels[2], channels[1], channels[2]);
+  //threshold(channels[2], filtered, 50, 255, CV_THRESH_BINARY);
 
   //Mat filtered1, filtered2;
   // Test for RED color
@@ -297,14 +297,13 @@ float feature_detection::calc_distance()
   // and W is actual object width.
   distances.clear();
 
-  float bar_width = 75; // mm
+  float bar_width = 10; // mm
 
-  float test_width = 100; // pixels, experimentally defined
-  float test_distance = 500; // mm, experimentally defined
+  //float test_width = 100; // pixels, experimentally defined
+  //float test_distance = 500; // mm, experimentally defined
 
-
-  float focal_length = (test_width * test_distance) / bar_width;
-
+  // float focal_length = (test_width * test_distance) / bar_width;
+  float focal_length = 683; 
   // When the focal length is calculated, the distance to new objects can be determined.
   // D = (W x F) / P
   if(bars.size() == 0)

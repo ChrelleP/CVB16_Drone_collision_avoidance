@@ -87,7 +87,7 @@ void *CV_avoid(void *arg)
 
    int LB_MASK = 60;                 // Lower bound for mask
    int UB_MASK = 100;                 // Upper bound for mask
-   int AS_MEDIAN = 9;                  // Apperture size for median filter
+   int AS_MEDIAN = 3;                  // Apperture size for median filter
 
    int LB_CANNY = 100;                // Lower bound for canny
    int UB_CANNY = 200;                // Upper bound for canny
@@ -133,8 +133,8 @@ void *CV_avoid(void *arg)
      //FT.draw_objects();
      //FT.draw_filtered_lines();
      //FT.draw_lines();
-     FT.show_source();
-     FT.show_filter();
+     //FT.show_source();
+     //FT.show_filter();
      //FT.show_edge_map();
 
      fly_vid.write(FT.source);
@@ -157,7 +157,7 @@ int main ()
   // -------- Startup ---------
   DSM_RX_TX DSM_UART;
 
-  fstream flight_data;
+  ofstream flight_data;
   flight_data.open("/home/pi/CVB16/Data/flight_data.dat");
 
   // Syntax for data
@@ -237,7 +237,6 @@ int main ()
           switch(local_reaction)
           {
             case REACT_STOP: state = STATE_STOP;
-                             stop_value = TX.channel_value[6];
                              break;
             case REACT_REDUCED: state = STATE_REDUCED;
                                   break;
@@ -276,15 +275,22 @@ int main ()
           // _________ HALFSPEED STATE ______________
           // Use half the speed
           TX = RX;
-
-          TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) * ( (1/600) * (local_dist - STOP_DIST) + 0.5 ) ) + pitch_default;
-          TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) * ( (1/600) * (local_dist - STOP_DIST) + 0.5 ) ) + roll_default;
-          TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) * ( (1/600) * (local_dist - STOP_DIST) + 0.5 ) ) + yaw_default;
+          if(local_dist > 400)
+		{
+		local_dist = 400;
+		}
+	  else if (local_dist < 100)
+		{
+		local_dist = 100;
+		}
+	  TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) * ( (0.0016666) * (local_dist - STOP_DIST) + 0.5 ) ) + pitch_default;
+          TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) * ( (0.00166666) * (local_dist - STOP_DIST) + 0.5 ) ) + roll_default;
+          TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) * ( (0.00166666) * (local_dist - STOP_DIST) + 0.5 ) ) + yaw_default;
 
           if(RX.channel_value[PITCH] < pitch_default)
           {
-            TX.channel_value[PITCH] = ( (RX.channel_value[PITCH] - pitch_default) * (1/300)*(local_dist - STOP_DIST) + pitch_default);
-          }
+            TX.channel_value[PITCH] = ( (RX.channel_value[PITCH] - pitch_default) * (0.0033333333)*(local_dist - STOP_DIST) + pitch_default);
+	  }
 
           // LED
           if(digitalRead(LED) == HIGH)
@@ -297,8 +303,7 @@ int main ()
           {
             case REACT_ECHO: state = STATE_ECHO;
                                  break;
-            case REACT_STOP:     state = STATE_REDUCED;
-                                 stop_value = TX.channel_value[6];
+            case REACT_STOP:     state = STATE_STOP;
                                  break;
             default:         break;
           }
@@ -320,12 +325,13 @@ int main ()
       state = state;
 
     // Write data to file
-    flight_data << local_dist << ";" << local_reaction << endl;
+    //printf("Calculated distance: %f\n",local_dist);
+    flight_data << local_dist << ";" << local_reaction << ";";
     flight_data << RX.channel_value[THROTTLE] << ";" << RX.channel_value[PITCH] << ";" << RX.channel_value[ROLL] << ";" << RX.channel_value[YAW] << ";";
     flight_data << TX.channel_value[THROTTLE] << ";" << TX.channel_value[PITCH] << ";" << TX.channel_value[ROLL] << ";" << TX.channel_value[YAW] << endl;
 
     // Printing information
-    /*system("clear"); // Clear terminal
+    system("clear"); // Clear terminal
 
     printf("---------- PACKETS ----------\n");
     printf("channel 0 | TX: %d \t RX: %d \n", TX.channel_value[0], RX.channel_value[0]);
@@ -337,11 +343,11 @@ int main ()
     printf("channel 6 | TX: %d \t RX: %d \n", TX.channel_value[6], RX.channel_value[6]);
 
     printf("\n ------ States And Reacts -------\n");
-    printf(" State: %d \t React: %d \n", state, local_reaction);
+    printf(" State: %d \t React: %d \t local_dist: %f \n", state, local_reaction, local_dist);
 
     printf("\n ------ Default values -------\n");
     printf(" Pitch: %d \t Roll: %d \t Yaw: %d \t Throttle: %d \n", pitch_default, roll_default, yaw_default, throttle_default);
-    */
+    
     if(RX.channel_value[PANIC_BIND] > 1000) // Stop at bind/panic button
       abort = true;
   }
