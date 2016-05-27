@@ -338,7 +338,7 @@ int main ()
             case REACT_STOP:     state = STATE_STOP;
                                  run = 23;
                                  break;
-            default:    transistion = 30;
+            default:    transition = 30;
                         break;
           }
           break;
