@@ -377,7 +377,7 @@ int main ()
     printf("channel 6 | TX: %d \t RX: %d \n", TX.channel_value[6], RX.channel_value[6]);
 
     printf("\n ------ States And Reacts -------\n");
-    printf(" State: %d \t React: %d \t local_dist: %f \n", state, local_reaction, local_dist);
+    printf(" State: %d \t React: %d \t local_dist: %f \t run: %d \n", state, local_reaction, local_dist, run);
 
     printf("\n ------ Default values -------\n");
     printf(" Pitch: %d \t Roll: %d \t Yaw: %d \t Throttle: %d \n", pitch_default, roll_default, yaw_default, throttle_default);
