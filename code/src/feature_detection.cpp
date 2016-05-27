@@ -303,7 +303,7 @@ float feature_detection::calc_distance()
   //float test_distance = 500; // mm, experimentally defined
 
   // float focal_length = (test_width * test_distance) / bar_width;
-  float focal_length = 683; 
+  float focal_length = 683;
   // When the focal length is calculated, the distance to new objects can be determined.
   // D = (W x F) / P
   if(bars.size() == 0)
@@ -333,7 +333,7 @@ int feature_detection::collision_risk(int global_react)
 
   //printf("temp distance: %f\n", temp_dist);
 
-  if(temp_dist <= 100)
+  if(temp_dist <= 150)
   {
     return REACT_STOP;
   }

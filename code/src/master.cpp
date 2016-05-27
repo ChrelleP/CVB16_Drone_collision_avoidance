@@ -46,7 +46,7 @@ using namespace cv;
 #define PANIC_BIND           5
 
 #define LED		               21
-#define STOP_DIST            100
+#define STOP_DIST            150
 #define REDUCED_DIST         400
 
 // --------------------------- GLOBAL VARIABLES --------------------------------
@@ -184,6 +184,8 @@ int main ()
   int stop_value = 0;
   int packet_counter = 0;
   int temp_FM;
+  int run = 0;
+  int transition = 0;
 
   int throttle_default = CHANNEL0_DEFAULT;
   int yaw_default = CHANNEL3_DEFAULT;
@@ -238,7 +240,7 @@ int main ()
           // Update state
           switch(local_reaction)
           {
-            case REACT_STOP: state = STATE_STOP;
+            case REACT_STOP: state = STATE_REDUCED;
                              break;
             case REACT_REDUCED: state = STATE_REDUCED;
                                   break;
@@ -250,6 +252,7 @@ int main ()
           // Keep constant throttle, everything else 0.
           TX = RX;
 
+
           if(RX.channel_value[PITCH] < pitch_default){
             TX.channel_value[PITCH] = pitch_default;
           }
@@ -260,38 +263,59 @@ int main ()
           TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) / 2 ) + roll_default;
           TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) / 2 ) + yaw_default;
 
+          if(run > 0)
+          {
+            TX.channel_value[PITCH] = pitch_default + 200;
+            run --;
+          }
+
           // LED
           digitalWrite(LED, LOW);
 
           // Update state
           switch(local_reaction)
           {
-            case REACT_ECHO: state = STATE_ECHO;
-                                 break;
-            case REACT_REDUCED: state = STATE_REDUCED;
-                                  break;
-            default:         break;
+            case REACT_ECHO:  if(transition == 0)
+                              {
+                                state = STATE_REDUCED;
+                              }
+                              else{
+                                transition --;
+                              }
+                              break;
+            case REACT_REDUCED: if(transition == 0)
+                                {
+                                  state = STATE_REDUCED;
+                                }
+                                else{
+                                  transition --;
+                                }
+                                break;
+            default:    transition = 30;
+                        break;
           }
           break;
        case STATE_REDUCED:
           // _________ HALFSPEED STATE ______________
           // Use half the speed
           TX = RX;
+
           if(local_dist > 400)
-		{
-		local_dist = 400;
-		}
-	  else if (local_dist < 100)
-		{
-		local_dist = 100;
-		}
-	  TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) * ( (0.0016666) * (local_dist - STOP_DIST) + 0.5 ) ) + pitch_default;
-          TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) * ( (0.00166666) * (local_dist - STOP_DIST) + 0.5 ) ) + roll_default;
-          TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) * ( (0.00166666) * (local_dist - STOP_DIST) + 0.5 ) ) + yaw_default;
+      		{
+      		    local_dist = 400;
+      		}
+      	  else if (local_dist < 150)
+      		{
+      		    local_dist = 150;
+      		}
+
+      	  TX.channel_value[PITCH] =  ( (RX.channel_value[PITCH] - pitch_default) * ( (0.002) * (local_dist - STOP_DIST) + 0.5 ) ) + pitch_default;
+          TX.channel_value[ROLL] =  ( (RX.channel_value[ROLL] - roll_default) * ( (0.002) * (local_dist - STOP_DIST) + 0.5 ) ) + roll_default;
+          TX.channel_value[YAW] =  ( (RX.channel_value[YAW] - yaw_default) * ( (0.002) * (local_dist - STOP_DIST) + 0.5 ) ) + yaw_default;
 
           if(RX.channel_value[PITCH] < pitch_default)
           {
-            TX.channel_value[PITCH] = ( (RX.channel_value[PITCH] - pitch_default) * (0.0033333333)*(local_dist - STOP_DIST) + pitch_default);
+            TX.channel_value[PITCH] = ( (RX.channel_value[PITCH] - pitch_default) * (0.004)*(local_dist - STOP_DIST) + pitch_default);
 	  }
 
           // LED
@@ -303,11 +327,19 @@ int main ()
           // Update state
           switch(local_reaction)
           {
-            case REACT_ECHO: state = STATE_ECHO;
-                                 break;
+            case REACT_ECHO: if(transition == 0)
+                              {
+                                state = STATE_ECHO;
+                              }
+                              else{
+                                transition --;
+                              }
+                              break;
             case REACT_STOP:     state = STATE_STOP;
+                                 run = 23;
                                  break;
-            default:         break;
+            default:    transistion = 30;
+                        break;
           }
           break;
        default: cout << "Error in state" << endl;
