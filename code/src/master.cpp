@@ -1,7 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
-// MAIN FILE FOR UAV DRONE
+// Master file for bachelor project
+// "Collision avoidance for UAVs in indoor Agriculture"
+// An overview of the use and architecture can be found in the report.
 //
-// Made by: Christian and Vincent
+// Made by: Christian Pedersen and Vincent Tofterup
 ////////////////////////////////////////////////////////////////////////////////
 
 // ---------------------------- INCLUDES ---------------------------------------
@@ -49,11 +51,11 @@ using namespace cv;
 
 // --------------------------- GLOBAL VARIABLES --------------------------------
 
-volatile int global_reaction = REACT_NOTHING;
+volatile int global_reaction = REACT_NOTHING;     // Variables used for shared communication between threads
 volatile float global_dist = 10000;
 volatile int global_abort = false;
 
-pthread_mutex_t thread_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t thread_mutex = PTHREAD_MUTEX_INITIALIZER;     // Mutex (Semaphore) used to avoid conflicts between threads.
 
 // --------------------------- FUNCTIONS ---------------------------------------
 void *CV_avoid(void *arg)
@@ -347,7 +349,7 @@ int main ()
 
     printf("\n ------ Default values -------\n");
     printf(" Pitch: %d \t Roll: %d \t Yaw: %d \t Throttle: %d \n", pitch_default, roll_default, yaw_default, throttle_default);
-    
+
     if(RX.channel_value[PANIC_BIND] > 1000) // Stop at bind/panic button
       abort = true;
   }
